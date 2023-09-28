@@ -128,7 +128,7 @@ const addMovieByImdb = async (req, res) => {
       res.status(500).json(result)
     }
 
-    const fData = await fetch(`https://www.omdbapi.com/?i=${imdbId}&apikey=${process.env.OMDb_API_KEY}`)
+    const fData = await fetch(`https://www.omdbapi.com/?i=${imdbId}&apikey=${process.env.OMDb_API_KEY}&plot=short`)
     const jData = await fData.json()
 
     if (jData.Response === 'False') {
