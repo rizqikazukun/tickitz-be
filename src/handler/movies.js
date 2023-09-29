@@ -3,7 +3,14 @@ const sql = require('../database/pgConnection')
 
 const getMovies = async (req, res) => {
   try {
-    const movies = await sql`SELECT id, name, duration, genres, poster FROM movies`
+    const { search, years } = req.query
+
+    const movies = await sql`SELECT id, name, duration, genres, poster FROM movies
+    ${!search || search === '' ? sql`` : search === '' ? sql`` : sql`where lower(name) like lower(${String('%') + search + String('%')})`}
+    ${!years || years === '' ? sql`` : years === 'desc' ? sql`order by release_date desc` : years === 'asc' ? sql`order by release_date asc` : sql``}`
+
+    // const movies = await sql`SELECT id, name, duration, genres, poster FROM movies
+    // ${!years || years === '' ? sql`` : years === 'desc' ? sql`order by release_date desc` : sql`order by release_date asc`}`
 
     if (movies.length === 0) {
       const result = {
@@ -22,6 +29,7 @@ const getMovies = async (req, res) => {
     }
     res.status(200).json(result)
   } catch (error) {
+    console.log(error.message)
     const result = {
       success: false,
       message: 'Bad Gateway',

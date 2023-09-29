@@ -91,7 +91,7 @@ ALTER TABLE order_history ADD CONSTRAINT fk_userId_users FOREIGN KEY (user_id) R
 
 
 -- DML
-select * from movies m ;
+select * from movies m order by release_date asc;
 select * from cinemas c ;
 select * from users u ;
 select * from order_history oh ;
@@ -99,6 +99,8 @@ select * from order_history oh ;
 delete from movies where id=21;
 
 update movies set name='Petualangan Sherina 2', genres='["Fun"]' where id='21';
+
+SELECT id, name, duration, genres, poster FROM movies where lower(name ) like lower('%iron%') order by release_date asc
 
 insert into movies (name, release_date, duration, genres, directed_by, casts, synopsis, poster)
 values ('Petualangan Upin dan Ipin', '2013-02-15', '120 min', '["Comedy", "Family"]', 'Shin', '["Upin","Ipin", "Kak Ros", "Opah"]', 'Pada dahulu kala', 
