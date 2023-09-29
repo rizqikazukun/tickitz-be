@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 const express = require('express')
-const { getMovies, getDetailMovie, addMovie, addMovieByImdb, updateMovie } = require('./handler/movies')
+const { getMovies, getDetailMovie, addMovie, addMovieByImdb } = require('./handler/movies')
 const { default: helmet } = require('helmet')
 const app = express()
 
@@ -18,7 +18,6 @@ app.get('/movies', getMovies)
 app.get('/movies/:id', getDetailMovie)
 app.post('/movies', addMovie)
 app.post('/movies/imdb', addMovieByImdb)
-app.put('/movies', updateMovie)
 
 app.listen(port, () => {
   console.log(`App running on http://localhost:${port}`)

@@ -166,47 +166,47 @@ const addMovieByImdb = async (req, res) => {
   }
 }
 
-const updateMovie = async (req, res) => {
-  try {
-    const { id, name, release_date, duration, genres, directed_by, casts, synopsis, poster } = req.body
+// const updateMovie = async (req, res) => {
+//   try {
+//     const { id, name, release_date, duration, genres, directed_by, casts, synopsis, poster } = req.body
 
-    if (!id) {
-      const result = {
-        success: false,
-        message: 'Bad Input, please insert proper id',
-        data: []
-      }
-      res.status(400).json(result)
-    }
+//     if (!id) {
+//       const result = {
+//         success: false,
+//         message: 'Bad Input, please insert proper id',
+//         data: []
+//       }
+//       res.status(400).json(result)
+//     }
 
-    const movies = await sql`update movies set 
-    name=${name}, 
-    release_date=${release_date}, 
-    duration=${duration}, 
-    genres=${JSON.stringify(genres)}, 
-    directed_by=${directed_by},
-    casts=${JSON.stringify(casts)}, 
-    synopsis=${synopsis}, 
-    poster=${poster} 
-    where id=${id} RETURNING id;`
+//     const movies = await sql`update movies set
+//     name=${name},
+//     release_date=${release_date},
+//     duration=${duration},
+//     genres=${JSON.stringify(genres)},
+//     directed_by=${directed_by},
+//     casts=${JSON.stringify(casts)},
+//     synopsis=${synopsis},
+//     poster=${poster}
+//     where id=${id} RETURNING id;`
 
-    const result = {
-      success: true,
-      message: 'Data Updated',
-      data: movies
-    }
-    console.log(result)
-    res.status(200).json(result)
-  } catch (error) {
-    console.log(error.message)
-    const result = {
-      success: false,
-      message: 'Internal Application Error',
-      data: []
-    }
-    return res.status(500).json(result)
-    // don't remove return or it will buggy
-  }
-}
+//     const result = {
+//       success: true,
+//       message: 'Data Updated',
+//       data: movies
+//     }
+//     console.log(result)
+//     res.status(200).json(result)
+//   } catch (error) {
+//     console.log(error.message)
+//     const result = {
+//       success: false,
+//       message: 'Internal Application Error',
+//       data: []
+//     }
+//     return res.status(500).json(result)
+//     // don't remove return or it will buggy
+//   }
+// }
 
-module.exports = { getMovies, getDetailMovie, addMovie, addMovieByImdb, updateMovie }
+module.exports = { getMovies, getDetailMovie, addMovie, addMovieByImdb }
