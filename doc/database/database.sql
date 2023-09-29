@@ -1,4 +1,5 @@
 -- This is base on postgreSQL Query
+-- DDL
 
 DROP TABLE IF EXISTS movies;
 
@@ -80,8 +81,56 @@ CREATE TABLE "public"."users" (
     "photo_profile" text
 );
 
-ALTER TABLE cinemas ADD CONSTRAINT fk_cinemas_movies FOREIGN KEY (movie_id) REFERENCES movies (id);
-ALTER TABLE order_history ADD CONSTRAINT fk_movieId_movies FOREIGN KEY (movie_id) REFERENCES movies (id);
-ALTER TABLE order_history ADD CONSTRAINT fk_cinemaId_cinemas FOREIGN KEY ("cinema_id") REFERENCES "cinemas" ("id");
-ALTER TABLE order_history ADD CONSTRAINT fk_userId_users FOREIGN KEY (user_id) REFERENCES users (id);
 
+-- Adding FK
+-- DDL
+ALTER TABLE cinemas ADD CONSTRAINT fk_cinemas_movies FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE order_history ADD CONSTRAINT fk_movieId_movies FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE ON UPDATE CASCADE,;
+ALTER TABLE order_history ADD CONSTRAINT fk_cinemaId_cinemas FOREIGN KEY ("cinema_id") REFERENCES "cinemas" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE order_history ADD CONSTRAINT fk_userId_users FOREIGN KEY (user_id) REFERENCES users (id ON DELETE CASCADE ON UPDATE CASCADE);
+
+
+-- DML
+select * from movies m ;
+select * from cinemas c ;
+select * from users u ;
+select * from order_history oh ;
+
+delete from movies where id=21;
+
+update movies set name='Petualangan Sherina 2', genres='["Fun"]' where id='21';
+
+insert into movies (name, release_date, duration, genres, directed_by, casts, synopsis, poster)
+values ('Petualangan Upin dan Ipin', '2013-02-15', '120 min', '["Comedy", "Family"]', 'Shin', '["Upin","Ipin", "Kak Ros", "Opah"]', 'Pada dahulu kala', 
+'https://m.media-amazon.com/images/M/MV5BMDgzZjNkMTUtNTdlOC00OGZiLWE2OGUtMzcyOWNiZmRmMzQxXkEyXkFqcGdeQXVyNDE2NjE1Njc@._V1_SX300.jpg');
+
+update movies set
+    name='Petualangan dari bharat 3',
+    release_date='1989-02-15T00:00:00.000Z',
+    duration='120 min',
+    genres='["History","Drama"]',
+    directed_by='Shin',
+    casts='["Ai","Ue","Ou"]',
+    synopsis='Pada dahulu kala',
+    poster='https://m.media-amazon.com/images/M/MV5BMDgzZjNkMTUtNTdlOC00OGZiLWE2OGUtMzcyOWNiZmRmMzQxXkEyXkFqcGdeQXVyNDE2NjE1Njc@._V1_SX300.jpg'
+    where id='22';
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- EOL
