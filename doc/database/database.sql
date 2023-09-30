@@ -100,7 +100,7 @@ delete from movies where id=21;
 
 update movies set name='Petualangan Sherina 2', genres='["Fun"]' where id='21';
 
-SELECT id, name, duration, genres, poster FROM movies where lower(name ) like lower('%iron%') order by release_date asc
+SELECT id, name, duration, genres, poster FROM movies where lower(name) like lower('%petualangan%') order by id
 
 insert into movies (name, release_date, duration, genres, directed_by, casts, synopsis, poster)
 values ('Petualangan Upin dan Ipin', '2013-02-15', '120 min', '["Comedy", "Family"]', 'Shin', '["Upin","Ipin", "Kak Ros", "Opah"]', 'Pada dahulu kala', 
