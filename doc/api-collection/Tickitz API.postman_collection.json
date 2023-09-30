@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "Get Movies",
+			"name": "[REQ] Get Movies",
 			"event": [
 				{
 					"listen": "test",
@@ -36,7 +36,7 @@
 			"response": []
 		},
 		{
-			"name": "Get Movie By Id",
+			"name": "[REQ] Get Movie By Id",
 			"event": [
 				{
 					"listen": "test",
@@ -60,21 +60,98 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/movies/12",
+					"raw": "localhost:3000/movies/2",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"movies",
-						"12"
+						"2"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Add Movie",
+			"name": "[OPT] Search movie + Sort by year",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var template = `",
+							"<style type=\"text/css\">",
+							"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}",
+							"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}",
+							"    .tftable tr {background-color:#ffffff;}",
+							"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}",
+							"    .tftable tr:hover {background-color:#e0ffff;}",
+							"</style>",
+							"",
+							"<table class=\"tftable\" border=\"1\">",
+							"    <tr>",
+							"        <th>ID</th>",
+							"        <th>Name</th>",
+							"        <th>Duration</th>",
+							"        <th>Genres</th>",
+							"        <th>Poster</th>",
+							"    </tr>",
+							"    ",
+							"    {{#each response.data}}",
+							"        <tr id=row_{{@key}}>",
+							"            <td>{{id}}</td>",
+							"            <td>{{name}}</td>",
+							"            <td>{{duration}}</td>",
+							"            <td>{{genres}}</td>",
+							"            <td>{{poster}}</td>",
+							"        </tr>",
+							"    {{/each}}",
+							"</table>",
+							"`;",
+							"",
+							"function constructVisualizerPayload() {",
+							"    var res = pm.response.json();",
+							"    ",
+							"    return {response: res};",
+							"}",
+							"",
+							"pm.visualizer.set(template, constructVisualizerPayload());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/movies?search=petualangan&year=desc",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"movies"
+					],
+					"query": [
+						{
+							"key": "search",
+							"value": "petualangan",
+							"description": "Search anything like a keyword"
+						},
+						{
+							"key": "year",
+							"value": "desc",
+							"description": "Sorting by year [ asc | desc | default by id ]"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[REQ] Add Movie",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -101,7 +178,7 @@
 			"response": []
 		},
 		{
-			"name": "Add Movie By Imdb Id",
+			"name": "[IMP] Add Movie By Imdb Id",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -123,6 +200,70 @@
 					"path": [
 						"movies",
 						"imdb"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[REQ] Get Cinemas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/cinemas",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"cinemas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[REQ] Get Spesific Cinema",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/cinemas/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"cinemas",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[REQ] Add Cinema",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "        {\r\n            \"movie_id\": 3,\r\n            \"name\": \"CGV Cinemas Pacific Place\",\r\n            \"city\": \"South Jakarta\",\r\n            \"address\": \"Pacific Place Lt. 6. Jln. Jend. Sudirman Kav 52-53, SCBD Jakarta\",\r\n            \"show_times\": [\r\n                \"11:30\",\r\n                \"14:00\",\r\n                \"16:30\",\r\n                \"19:00\",\r\n                \"19:50\",\r\n                \"21:30\"\r\n            ],\r\n            \"price\": 75000,\r\n            \"logo\": \"https://upload.wikimedia.org/wikipedia/commons/6/6c/CGV_Cinemas.svg\"\r\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/cinemas",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"cinemas"
 					]
 				}
 			},
