@@ -3,6 +3,7 @@ const express = require('express')
 const { getMovies, getDetailMovie, addMovie } = require('./handler/movies')
 const { default: helmet } = require('helmet')
 const { addMovieByImdb } = require('./handler/omdb')
+const { getCinemas, getSpesificCinema, addCinemas } = require('./handler/cinema')
 const app = express()
 
 if (process.env.NODE_ENV !== 'production') {
@@ -23,6 +24,9 @@ app.post('/movies', addMovie)
 app.post('/movies/imdb', addMovieByImdb)
 
 // ENDPOINT CINEMA
+app.get('/cinemas', getCinemas)
+app.get('/cinemas/:id', getSpesificCinema)
+app.post('/cinemas', addCinemas)
 
 app.listen(port, () => {
   console.log(`App running on http://localhost:${port}`)

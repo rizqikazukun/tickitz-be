@@ -91,7 +91,7 @@ ALTER TABLE order_history ADD CONSTRAINT fk_userId_users FOREIGN KEY (user_id) R
 
 
 -- DML
-select * from movies m order by release_date asc;
+select * from movies m order by id asc;
 select * from cinemas c ;
 select * from users u ;
 select * from order_history oh ;
@@ -116,6 +116,18 @@ update movies set
     synopsis='Pada dahulu kala',
     poster='https://m.media-amazon.com/images/M/MV5BMDgzZjNkMTUtNTdlOC00OGZiLWE2OGUtMzcyOWNiZmRmMzQxXkEyXkFqcGdeQXVyNDE2NjE1Njc@._V1_SX300.jpg'
     where id='22';
+   
+   insert into cinemas 
+      (movie_id, name, city, address, show_times, price, logo)
+    values
+      (2,
+      'CGV Cinemas Pacific Place',
+      'South Jakarta',
+      'Pacific Place Lt. 6. Jln. Jend. Sudirman Kav 52-53, SCBD Jakarta',
+      '["11:30","14:00","16:30","19:00","19:50","21:30"]',
+      75000,
+      'https://upload.wikimedia.org/wikipedia/commons/6/6c/CGV_Cinemas.svg')
+    returning id;
 
    
 

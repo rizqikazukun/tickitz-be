@@ -1,6 +1,10 @@
 /* eslint-disable camelcase */
 const sql = require('../database/pgConnection')
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
 const addMovieByImdb = async (req, res) => {
   try {
     const { imdbId } = req.body
