@@ -4,7 +4,7 @@
 DROP TABLE IF EXISTS movies;
 
 CREATE TABLE "movies" (
-    "id" SERIAL UNIQUE PRIMARY KEY,
+    "id" SERIAL4 UNIQUE PRIMARY KEY,
     "name" varchar(200),
     "release_date" date,
     "duration" varchar(100),
@@ -18,7 +18,7 @@ CREATE TABLE "movies" (
 DROP TABLE IF EXISTS "cinemas";
 
 CREATE TABLE "cinemas" (
-    "id" SERIAL UNIQUE PRIMARY KEY,
+    "id" SERIAL4 UNIQUE PRIMARY KEY,
     "movie_id" int4,
     "name" varchar(200),
     "city" varchar(255),
@@ -31,7 +31,7 @@ CREATE TABLE "cinemas" (
 DROP TABLE IF EXISTS "order_history";
 
 CREATE TABLE "order_history" (
-    "id" SERIAL UNIQUE PRIMARY KEY,
+    "id" SERIAL4 UNIQUE PRIMARY KEY,
     "movie_id" int4,
     "cinema_id" int4,
     "user_id" int4,
@@ -44,14 +44,14 @@ CREATE TABLE "order_history" (
 DROP TABLE IF EXISTS "months";
 
 CREATE TABLE "months" (
-    "id" SERIAL UNIQUE PRIMARY KEY,
+    "id" SERIAL4 UNIQUE PRIMARY KEY,
     "name" varchar(20)
 );
 
 DROP TABLE IF EXISTS "payments";
 
 CREATE TABLE "payments" (
-	"id" SERIAL UNIQUE PRIMARY KEY,
+	"id" SERIAL4 UNIQUE PRIMARY KEY,
     "name" varchar(200),
     "logo" text
 );
@@ -59,20 +59,20 @@ CREATE TABLE "payments" (
 DROP TABLE IF EXISTS seats;
 
 CREATE TABLE "seats" (
-    "id" SERIAL UNIQUE PRIMARY KEY,
-    "seat_a" json,
-    "seat_b" json,
-    "seat_c" json,
-    "seat_d" json,
-    "seat_e" json,
-    "seat_f" json,
-    "seat_g" json,
+    "id" SERIAL4 UNIQUE PRIMARY KEY,
+    "seat_a" jsonb,
+    "seat_b" jsonb,
+    "seat_c" jsonb,
+    "seat_d" jsonb,
+    "seat_e" jsonb,
+    "seat_f" jsonb,
+    "seat_g" jsonb
 );
 
 DROP TABLE IF EXISTS "users";
 
-CREATE TABLE "public"."users" (
-    "id" SERIAL UNIQUE PRIMARY KEY,
+CREATE TABLE "users" (
+    "id" SERIAL4 UNIQUE PRIMARY KEY,
     "first_name" varchar(100),
     "last_name" varchar(100),
     "phone_number" varchar(20),
@@ -116,6 +116,7 @@ update movies set
     synopsis='Pada dahulu kala',
     poster='https://m.media-amazon.com/images/M/MV5BMDgzZjNkMTUtNTdlOC00OGZiLWE2OGUtMzcyOWNiZmRmMzQxXkEyXkFqcGdeQXVyNDE2NjE1Njc@._V1_SX300.jpg'
     where id='22';
+   
    
    insert into cinemas 
       (movie_id, name, city, address, show_times, price, logo)
