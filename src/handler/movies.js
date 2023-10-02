@@ -7,7 +7,7 @@ const getMovies = async (req, res) => {
 
     const movies = await sql`SELECT id, name, ${!year || year === '' ? sql`` : sql`release_date,`} duration, genres, poster FROM movies
     ${!search || search === '' ? sql`` : sql`where lower(name) like lower(${String('%') + search + String('%')})`}
-    ${!year || year === '' ? sql`order by id` : year === 'desc' ? sql`order by release_date desc` : year === 'asc' ? sql`order by release_date asc` : sql`order by id`}`
+    ${!year || year === '' ? sql`order by name` : year === 'desc' ? sql`order by release_date desc` : year === 'asc' ? sql`order by release_date asc` : sql`order by id`}`
 
     if (movies.length === 0) {
       res.status(404).json({

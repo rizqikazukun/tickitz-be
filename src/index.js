@@ -3,7 +3,7 @@ const express = require('express')
 const { getMovies, getDetailMovie, addMovie } = require('./handler/movies')
 const { default: helmet } = require('helmet')
 const { addMovieByImdb } = require('./handler/omdb')
-const { getCinemas, getSpesificCinema, addCinemas } = require('./handler/cinema')
+const { getCinemas, getSpesificCinema, addCinemas } = require('./handler/cinemas')
 const app = express()
 
 if (process.env.NODE_ENV !== 'production') {
