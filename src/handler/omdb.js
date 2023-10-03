@@ -15,6 +15,7 @@ const addMovieByImdb = async (req, res) => {
         message: 'Please insert imdbId, must be sting and can\'t be empty'
       }
       res.status(400).json(result)
+      return
     }
 
     if (!process.env.OMDb_API_KEY) {
@@ -23,6 +24,7 @@ const addMovieByImdb = async (req, res) => {
         message: 'Internal Application Error'
       }
       res.status(500).json(result)
+      return
     }
 
     const fData = await fetch(`https://www.omdbapi.com/?i=${imdbId}&apikey=${process.env.OMDb_API_KEY}&plot=short`)
@@ -34,6 +36,7 @@ const addMovieByImdb = async (req, res) => {
         message: jData.Error
       }
       res.status(400).json(result)
+      return
     }
 
     const { Title, Released, Runtime, Genre, Director, Actors, Plot, Poster } = jData
@@ -51,7 +54,7 @@ const addMovieByImdb = async (req, res) => {
       message: 'Data inserted',
       data: movies
     }
-    res.status(200).json(result)
+    return res.status(200).json(result)
   } catch (error) {
     console.log(error.message)
     const result = {
@@ -59,7 +62,7 @@ const addMovieByImdb = async (req, res) => {
       message: 'Bad Gateway',
       data: []
     }
-    res.status(502).json(result)
+    return res.status(502).json(result)
   }
 }
 
