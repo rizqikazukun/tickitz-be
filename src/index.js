@@ -3,7 +3,7 @@ const express = require('express')
 const { getMovies, getDetailMovie, addMovie, updateMovie, deleteMovie } = require('./handler/movies')
 const { default: helmet } = require('helmet')
 const { addMovieByImdb } = require('./handler/omdb')
-const { getCinemas, getSpesificCinema, addCinemas } = require('./handler/cinemas')
+const { getCinemas, getSpesificCinema, addCinemas, updateCinema, deleteCinema } = require('./handler/cinemas')
 const app = express()
 
 if (process.env.NODE_ENV !== 'production') {
@@ -29,6 +29,8 @@ app.delete('/movies/:id', deleteMovie)
 app.get('/cinemas', getCinemas)
 app.get('/cinemas/:id', getSpesificCinema)
 app.post('/cinemas', addCinemas)
+app.put('/cinemas/:id', updateCinema)
+app.delete('/cinemas/:id', deleteCinema)
 
 
 app.listen(port, () => {
