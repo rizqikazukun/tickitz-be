@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-const sql = require('../database/pgConnection')
+const sql = require('../databases/pgConnection')
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()

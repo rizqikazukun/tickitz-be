@@ -131,7 +131,7 @@ update movies set
     returning id;
 
    
-
+create database jwtHandling;
 
    
 

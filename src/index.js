@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
 const express = require('express')
-const { getMovies, getDetailMovie, addMovie, updateMovie, deleteMovie } = require('./handler/movies')
+const { getMovies, getDetailMovie, addMovie, updateMovie, deleteMovie } = require('./controllers/movies')
 const { default: helmet } = require('helmet')
-const { addMovieByImdb } = require('./handler/omdb')
-const { getCinemas, getSpesificCinema, addCinemas, updateCinema, deleteCinema } = require('./handler/cinemas')
+const { addMovieByImdb } = require('./controllers/omdb')
+const { getCinemas, getSpesificCinema, addCinemas, updateCinema, deleteCinema } = require('./controllers/cinemas')
 const app = express()
 
 if (process.env.NODE_ENV !== 'production') {
