@@ -135,16 +135,16 @@ const updateMovie = async (req, res) => {
       message: 'Data Updated',
       data: movies
     }
-    console.log(result)
     res.status(200).json(result)
   } catch (error) {
+
     console.log(error.message)
-    const result = {
+     res.status(500).json({
       success: false,
       message: 'Internal Application Error',
       data: []
-    }
-    return res.status(500).json(result)
+    })
+    return
     // don't remove return or it will buggy
   }
 }
