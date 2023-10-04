@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-const sql = require('../databases/pgConnection')
+const sql = require('../databases')
 
 const getMovies = async (req, res) => {
   try {

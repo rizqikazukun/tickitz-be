@@ -1,37 +1,23 @@
 /* eslint-disable camelcase */
 const express = require('express')
-const { getMovies, getDetailMovie, addMovie, updateMovie, deleteMovie } = require('./controllers/movies')
+const router = require('./routes')
 const { default: helmet } = require('helmet')
-const { addMovieByImdb } = require('./controllers/omdb')
-const { getCinemas, getSpesificCinema, addCinemas, updateCinema, deleteCinema } = require('./controllers/cinemas')
-const app = express()
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 
-const port = process.env.APP_PORT | 3000
+const app = express()
 
 // MIDDLEWARE
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'same-site' } }))
 
-// ENDPOINT MOVIES
-app.get('/movies', getMovies)
-app.get('/movies/:id', getDetailMovie)
-app.post('/movies', addMovie)
-app.post('/movies/imdb', addMovieByImdb)
-app.put('/movies/:id', updateMovie)
-app.delete('/movies/:id', deleteMovie)
+// Router
+app.use(router)
 
-// ENDPOINT CINEMA
-app.get('/cinemas', getCinemas)
-app.get('/cinemas/:id', getSpesificCinema)
-app.post('/cinemas', addCinemas)
-app.put('/cinemas/:id', updateCinema)
-app.delete('/cinemas/:id', deleteCinema)
-
+const port = process.env.APP_PORT | 3000
 
 app.listen(port, () => {
   console.log(`App running on http://localhost:${port}`)
