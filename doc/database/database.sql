@@ -76,7 +76,7 @@ CREATE TABLE "users" (
     "first_name" varchar(100),
     "last_name" varchar(100),
     "phone_number" varchar(20),
-    "email" varchar(100),
+    "email" varchar(100) UNIQUE,
     "password" varchar(250),
     "photo_profile" text
 );
@@ -88,6 +88,10 @@ ALTER TABLE cinemas ADD CONSTRAINT fk_cinemas_movies FOREIGN KEY (movie_id) REFE
 ALTER TABLE order_history ADD CONSTRAINT fk_movieId_movies FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE order_history ADD CONSTRAINT fk_cinemaId_cinemas FOREIGN KEY ("cinema_id") REFERENCES "cinemas" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE order_history ADD CONSTRAINT fk_userId_users FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+alter table users add constraint unique_email unique ("email") ;
+
+truncate users ;
 
 
 -- DML
