@@ -1,19 +1,15 @@
 /* eslint-disable camelcase */
-const sql = require('../databases')
+const sql = require('../utils')
 
-const getMovies = async (req, res) => {
+const getCinemas = async (req, res) => {
   try {
-    const { search, year } = req.query
+    const cinemas = await sql`SELECT * FROM cinemas`
 
-    const movies = await sql`SELECT id, name, ${!year || year === '' ? sql`` : sql`release_date,`} duration, genres, poster FROM movies
-    ${!search || search === '' ? sql`` : sql`where lower(name) like lower(${String('%') + search + String('%')})`}
-    ${!year || year === '' ? sql`order by name` : year === 'desc' ? sql`order by release_date desc` : year === 'asc' ? sql`order by release_date asc` : sql`order by id`}`
-
-    if (movies.length === 0) {
+    if (cinemas.length === 0) {
       res.status(404).json({
         success: false,
         message: 'Not Found',
-        data: movies
+        data: cinemas
       })
       return
     }
@@ -21,7 +17,7 @@ const getMovies = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'OK',
-      data: movies
+      data: cinemas
     })
   } catch (error) {
     console.log(error)
@@ -33,7 +29,7 @@ const getMovies = async (req, res) => {
   }
 }
 
-const getDetailMovie = async (req, res) => {
+const getSpesificCinema = async (req, res) => {
   try {
     const { id } = req.params
 
@@ -45,13 +41,13 @@ const getDetailMovie = async (req, res) => {
       return
     }
 
-    const movies = await sql`SELECT * FROM movies WHERE id=${id}`
+    const cinemas = await sql`SELECT * FROM cinemas WHERE id=${id}`
 
-    if (movies.length === 0) {
+    if (cinemas.length === 0) {
       res.status(404).json({
         success: false,
         message: 'Not Found',
-        data: movies
+        data: cinemas
       })
       return
     }
@@ -59,7 +55,7 @@ const getDetailMovie = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'OK',
-      data: movies
+      data: cinemas
     })
   } catch (error) {
     console.log(error)
@@ -71,9 +67,9 @@ const getDetailMovie = async (req, res) => {
   }
 }
 
-const addMovie = async (req, res) => {
+const addCinemas = async (req, res) => {
   try {
-    const { name, release_date, duration, genres, directed_by, casts, synopsis, poster } = req.body
+    const { movie_id, name, city, address, show_times, price, logo } = req.body
 
     if (!name) {
       res.status(400).json({
@@ -83,17 +79,17 @@ const addMovie = async (req, res) => {
       return
     }
 
-    const movies = await sql`
-      insert into movies
-        (name, release_date, duration, genres, directed_by, casts, synopsis, poster)
-      values
-        (${name}, ${release_date},${duration},${genres},${directed_by},${casts},${synopsis},${poster} )
-      returning id`
+    const cinemas = await sql`
+        insert into cinemas
+          (movie_id, name, city, address, show_times, price, logo)
+        values
+          (${movie_id},${name},${city},${address},${show_times},${price},${logo})
+        returning id`
 
     res.status(200).json({
       success: true,
       message: 'Data inserted',
-      data: movies
+      data: cinemas
     })
   } catch (error) {
     console.log(error)
@@ -105,10 +101,10 @@ const addMovie = async (req, res) => {
   }
 }
 
-const updateMovie = async (req, res) => {
+const updateCinema = async (req, res) => {
   try {
     const { id } = req.params
-    const { name, release_date, duration, genres, directed_by, casts, synopsis, poster } = req.body
+    const { movie_id, name, city, address, show_times, price, logo } = req.body
 
     if (!id) {
       const result = {
@@ -119,55 +115,19 @@ const updateMovie = async (req, res) => {
       res.status(400).json(result)
     }
 
-    const movies = await sql`update movies set
+    const movies = await sql`update cinemas set
     name=${name},
-    release_date=${release_date},
-    duration=${duration},
-    genres=${genres},
-    directed_by=${directed_by},
-    casts=${casts},
-    synopsis=${synopsis},
-    poster=${poster}
+    movie_id=${movie_id},
+    city=${city},
+    address=${address},
+    show_times=${show_times},
+    price=${price},
+    logo=${logo}
     where id=${id} RETURNING id;`
 
     const result = {
       success: true,
       message: 'Data Updated',
-      data: movies
-    }
-    res.status(200).json(result)
-  } catch (error) {
-
-    console.log(error.message)
-     res.status(500).json({
-      success: false,
-      message: 'Internal Application Error',
-      data: []
-    })
-    return
-    // don't remove return or it will buggy
-  }
-}
-
-const deleteMovie = async (req, res) => {
-  try {
-    const { id } = req.params
-
-    if (!id) {
-      const result = {
-        success: false,
-        message: 'Bad Input, please insert proper id',
-        data: []
-      }
-      res.status(400).json(result)
-      return
-    }
-
-    const movies = await sql`DELETE FROM movies where id=${id} RETURNING id;`
-
-    const result = {
-      success: true,
-      message: 'Data Deleted',
       data: movies
     }
     console.log(result)
@@ -184,4 +144,40 @@ const deleteMovie = async (req, res) => {
   }
 }
 
-module.exports = { getMovies, getDetailMovie, addMovie, updateMovie, deleteMovie }
+
+const deleteCinema = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    if (!id) {
+      const result = {
+        success: false,
+        message: 'Bad Input, please insert proper id',
+        data: []
+      }
+      res.status(400).json(result)
+      return
+    }
+
+    const cinemas = await sql`DELETE FROM cinemas where id=${id} RETURNING id;`
+
+    const result = {
+      success: true,
+      message: 'Data Deleted',
+      data: cinemas
+    }
+    console.log(result)
+    res.status(200).json(result)
+  } catch (error) {
+    console.log(error.message)
+    const result = {
+      success: false,
+      message: 'Internal Application Error',
+      data: []
+    }
+    return res.status(500).json(result)
+    // don't remove return or it will buggy
+  }
+}
+
+module.exports = { getCinemas, getSpesificCinema, addCinemas, updateCinema, deleteCinema }

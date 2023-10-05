@@ -1,4 +1,4 @@
-const sql = require('../databases')
+const sql = require('../utils')
 const bcrypt = require('bcrypt')
 
 const saltRoundssalt = 15

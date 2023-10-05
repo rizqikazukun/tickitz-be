@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-const sql = require('../databases')
+const sql = require('../utils')
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
