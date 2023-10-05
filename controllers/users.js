@@ -75,13 +75,23 @@ class Users {
 
             const userData = await sql`SELECT * FROM users where email=${email}`
 
+            if (userData.length === 0) {
+                res.status(400).json({
+                    success: false,
+                    message: "Bad Input, Email Not Registered" 
+                })
+                return
+            }
+
+            console.log("🚀 ~ file: users.js:78 ~ Users ~ loginUser ~ userData:", userData)
+            
+
             const match = await bcrypt.compare(password, userData[0].password)
 
             if (!match) {
                 res.status(401).json({
                     success: false,
-                    message: 'login failed',
-                    data: []
+                    message: 'login failed'
                 })
                 return
             }
@@ -181,6 +191,47 @@ class Users {
             const result = {
                 success: true,
                 message: 'Data Updated',
+                data: movies
+            }
+            res.status(200).json(result)
+        } catch (error) {
+
+            console.log(error.message)
+            res.status(500).json({
+                success: false,
+                message: 'Internal Application Error',
+                data: []
+            })
+            return
+            // don't remove return or it will buggy
+        }
+    }
+
+    static async updateUserPassword(req, res) {
+        try {
+            const token = req.headers.authorization.split('Bearer ')[1]
+            const { id } = jwt.decode(token, process.env.JWT_SECRET)
+            const { password } = req.body
+
+            if (!id) {
+                const result = {
+                    success: false,
+                    message: 'Bad Input, please insert proper id',
+                    data: []
+                }
+                res.status(400).json(result)
+            }
+
+            const hashed = await bcrypt.hash(password, saltRoundssalt)
+
+            const movies = await sql`
+            update users set
+            password=${hashed}
+            where id=${id} RETURNING id;`
+
+            const result = {
+                success: true,
+                message: 'Password Updated',
                 data: movies
             }
             res.status(200).json(result)
