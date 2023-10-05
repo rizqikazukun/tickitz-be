@@ -1,5 +1,6 @@
 const sql = require('../utils')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const saltRoundssalt = 15
 
@@ -20,9 +21,10 @@ class Users {
             if (!isValid) {
                 res.status(400).json({
                     success: false,
-                    message: "Bad Input",
+                    message: "Bad Input"
                 })
                 return
+
             }
 
             const hashed = await bcrypt.hash(password, saltRoundssalt)
@@ -55,9 +57,58 @@ class Users {
         }
     }
 
-    static async getUsers(req, res) {
-        
+    static async loginUser(req, res) {
+        try {
+
+            const { email, password } = req.body
+
+            const isValid = `${typeof email === typeof String() ||
+                typeof password === typeof String() ? true : false}`
+
+            if (!isValid) {
+                res.status(400).json({
+                    success: false,
+                    message: "Bad Input",
+                })
+                return
+            }
+
+            const userData = await sql`SELECT * FROM users where email=${email}`
+
+            const match = await bcrypt.compare(password, userData[0].password)
+
+            if (!match) {
+                res.status(401).json({
+                    success: false,
+                    message: 'login failed',
+                    data: []
+                })
+                return
+            }
+
+            const accessToken = await jwt.sign({
+                id: userData[0].id,
+                email: userData[0].email
+            }, process.env.JWT_SECRET)
+
+            res.status(200).json({
+                success: true,
+                message: 'login success',
+                accessToken
+            })
+
+
+        } catch (error) {
+
+            console.log(error)
+            res.status(502).json({
+                success: false,
+                message: 'Internal Application Error',
+            })
+        }
     }
+
+    
 
 
 }

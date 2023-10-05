@@ -21,6 +21,7 @@ router.put('/cinemas/:id', updateCinema)
 router.delete('/cinemas/:id', deleteCinema)
 
 // ENDPOINT USERS
-router.post('/users', Users.addUser)
+router.post('/users/register', Users.addUser)
+router.post('/users/login', Users.loginUser)
 
 module.exports = router
