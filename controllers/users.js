@@ -130,10 +130,10 @@ class Users {
 
     static async getDetailUser(req, res) {
         try {
-            
+
             const token = req.headers.authorization.split('Bearer ')[1]
             const { id } = jwt.decode(token, process.env.JWT_SECRET)
-            
+
             const userData = await sql`SELECT first_name, last_name, phone_number, email, photo_profile FROM users where id=${id}`
 
             res.status(200).json({
@@ -153,6 +153,48 @@ class Users {
             })
         }
 
+    }
+
+    static async updateUser(req, res) {
+        try {
+            const token = req.headers.authorization.split('Bearer ')[1]
+            const { id } = jwt.decode(token, process.env.JWT_SECRET)
+            const { first_name, last_name, phone_number, email } = req.body
+
+            if (!id) {
+                const result = {
+                    success: false,
+                    message: 'Bad Input, please insert proper id',
+                    data: []
+                }
+                res.status(400).json(result)
+            }
+
+            const movies = await sql`
+            update users set
+            first_name=${first_name},
+            last_name=${last_name},
+            phone_number=${phone_number},
+            email=${email}
+            where id=${id} RETURNING id;`
+
+            const result = {
+                success: true,
+                message: 'Data Updated',
+                data: movies
+            }
+            res.status(200).json(result)
+        } catch (error) {
+
+            console.log(error.message)
+            res.status(500).json({
+                success: false,
+                message: 'Internal Application Error',
+                data: []
+            })
+            return
+            // don't remove return or it will buggy
+        }
     }
 
 

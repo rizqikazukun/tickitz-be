@@ -26,5 +26,7 @@ router.get('/users',auth, Users.getListUser)
 router.get('/users/me', auth, Users.getDetailUser)
 router.post('/users/register', Users.addUser)
 router.post('/users/login', Users.loginUser)
+router.put('/users/edit', Users.updateUser)
+// router.put('/users/edit/password', Users.editUserPassword)
 
 module.exports = router
