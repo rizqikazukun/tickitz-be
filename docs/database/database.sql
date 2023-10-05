@@ -97,7 +97,7 @@ truncate users ;
 -- DML
 select * from movies m order by id asc;
 select * from cinemas c ;
-select * from users u ;
+select * from users u;
 select * from order_history oh ;
 
 delete from movies where id=21;

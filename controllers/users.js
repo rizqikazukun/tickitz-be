@@ -108,7 +108,53 @@ class Users {
         }
     }
 
-    
+    static async getListUser(req, res) {
+        try {
+            const userData = await sql`SELECT * FROM Users`
+
+            console.log("🚀 ~ file: users.js:115 ~ Users ~ getListUser ~ userData:", userData)
+            res.status(200).json({
+                success: true,
+                message: 'OK',
+                data: userData
+            })
+        } catch (error) {
+            console.log(error)
+            res.status(502).json({
+                success: false,
+                message: 'Internal Application Error',
+            })
+        }
+
+    }
+
+    static async getDetailUser(req, res) {
+        try {
+            
+            const token = req.headers.authorization.split('Bearer ')[1]
+            const { id } = jwt.decode(token, process.env.JWT_SECRET)
+            
+            const userData = await sql`SELECT first_name, last_name, phone_number, email, photo_profile FROM users where id=${id}`
+
+            res.status(200).json({
+                success: true,
+                message: 'OK',
+                data: userData
+            })
+
+
+
+
+        } catch (error) {
+            console.log(error)
+            res.status(502).json({
+                success: false,
+                message: 'Internal Application Error',
+            })
+        }
+
+    }
+
 
 
 }

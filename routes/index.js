@@ -4,6 +4,7 @@ const { getMovies, getDetailMovie, addMovie, updateMovie, deleteMovie } = requir
 const { getCinemas, getSpesificCinema, addCinemas, updateCinema, deleteCinema } = require('../controllers/cinemas')
 const Users = require('../controllers/users')
 const { addMovieByImdb } = require('../controllers/omdb')
+const auth = require('../middlewares/jwtAuth')
 
 // ENDPOINT MOVIES
 router.get('/movies', getMovies)
@@ -21,6 +22,8 @@ router.put('/cinemas/:id', updateCinema)
 router.delete('/cinemas/:id', deleteCinema)
 
 // ENDPOINT USERS
+router.get('/users',auth, Users.getListUser)
+router.get('/users/me', auth, Users.getDetailUser)
 router.post('/users/register', Users.addUser)
 router.post('/users/login', Users.loginUser)
 
