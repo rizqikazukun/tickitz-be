@@ -23,24 +23,25 @@ const auth = require('../middlewares/jwtAuth')
 // ENDPOINT MOVIES
 router.get('/movies', getMovies)
 router.get('/movies/:id', getDetailMovie)
-router.post('/movies', addMovie)
-router.post('/movies/imdb', addMovieByImdb)
-router.put('/movies/:id', updateMovie)
-router.delete('/movies/:id', deleteMovie)
+router.post('/movies', auth, addMovie)
+router.post('/movies/imdb', auth, addMovieByImdb)
+router.put('/movies/:id', auth, updateMovie)
+router.delete('/movies/:id', auth, deleteMovie)
 
 // ENDPOINT CINEMAS
 router.get('/cinemas', getCinemas)
 router.get('/cinemas/:id', getSpesificCinema)
-router.post('/cinemas', addCinemas)
-router.put('/cinemas/:id', updateCinema)
-router.delete('/cinemas/:id', deleteCinema)
+router.post('/cinemas', auth, addCinemas)
+router.put('/cinemas/:id', auth, updateCinema)
+router.delete('/cinemas/:id', auth, deleteCinema)
 
 // ENDPOINT USERS
-router.get('/users', auth, UsersController.getListUser)
-router.get('/users/me', auth, UsersController.getDetailUser)
+
 router.post('/users/register', UsersController.userRegister)
 router.post('/users/login', UsersController.loginUser)
-router.put('/users/edit', UsersController.updateUser)
-router.put('/users/edit/password', UsersController.updateUserPassword)
+router.get('/users', auth, UsersController.getListUser)
+router.get('/users/me', auth, UsersController.getDetailUser)
+router.put('/users/edit', auth, UsersController.updateUser)
+router.put('/users/edit/password', auth, UsersController.updateUserPassword)
 
 module.exports = router
