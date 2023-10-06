@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 const express = require('express')
+const cors = require('cors')
 const router = require('./routes')
 const { default: helmet } = require('helmet')
 
@@ -12,6 +13,7 @@ const app = express()
 // MIDDLEWARE
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use(cors({ origin: 'localhost' }))
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'same-site' } }))
 
 // Router
