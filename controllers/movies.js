@@ -1,13 +1,11 @@
 /* eslint-disable camelcase */
+const MovieModel = require('../models/movies')
 const sql = require('../utils')
 
 const getMovies = async (req, res) => {
   try {
-    const { search, year } = req.query
 
-    const movies = await sql`SELECT id, name, ${!year || year === '' ? sql`` : sql`release_date,`} duration, genres, poster FROM movies
-    ${!search || search === '' ? sql`` : sql`where lower(name) like lower(${String('%') + search + String('%')})`}
-    ${!year || year === '' ? sql`order by name` : year === 'desc' ? sql`order by release_date desc` : year === 'asc' ? sql`order by release_date asc` : sql`order by id`}`
+    const movies = await MovieModel._getListMovies(req)
 
     if (movies.length === 0) {
       res.status(404).json({
@@ -45,7 +43,7 @@ const getDetailMovie = async (req, res) => {
       return
     }
 
-    const movies = await sql`SELECT * FROM movies WHERE id=${id}`
+    const movies = await MovieModel._getDetailMovie(req)
 
     if (movies.length === 0) {
       res.status(404).json({
@@ -73,22 +71,8 @@ const getDetailMovie = async (req, res) => {
 
 const addMovie = async (req, res) => {
   try {
-    const { name, release_date, duration, genres, directed_by, casts, synopsis, poster } = req.body
 
-    if (!name) {
-      res.status(400).json({
-        success: false,
-        message: 'Bad Input'
-      })
-      return
-    }
-
-    const movies = await sql`
-      insert into movies
-        (name, release_date, duration, genres, directed_by, casts, synopsis, poster)
-      values
-        (${name}, ${release_date},${duration},${genres},${directed_by},${casts},${synopsis},${poster} )
-      returning id`
+    const movies = await MovieModel._addMovie(req)
 
     res.status(200).json({
       success: true,
@@ -107,28 +91,8 @@ const addMovie = async (req, res) => {
 
 const updateMovie = async (req, res) => {
   try {
-    const { id } = req.params
-    const { name, release_date, duration, genres, directed_by, casts, synopsis, poster } = req.body
 
-    if (!id) {
-      const result = {
-        success: false,
-        message: 'Bad Input, please insert proper id',
-        data: []
-      }
-      res.status(400).json(result)
-    }
-
-    const movies = await sql`update movies set
-    name=${name},
-    release_date=${release_date},
-    duration=${duration},
-    genres=${genres},
-    directed_by=${directed_by},
-    casts=${casts},
-    synopsis=${synopsis},
-    poster=${poster}
-    where id=${id} RETURNING id;`
+    const movies = await MovieModel._updateMovie(req)
 
     const result = {
       success: true,
@@ -151,19 +115,7 @@ const updateMovie = async (req, res) => {
 
 const deleteMovie = async (req, res) => {
   try {
-    const { id } = req.params
-
-    if (!id) {
-      const result = {
-        success: false,
-        message: 'Bad Input, please insert proper id',
-        data: []
-      }
-      res.status(400).json(result)
-      return
-    }
-
-    const movies = await sql`DELETE FROM movies where id=${id} RETURNING id;`
+    const movies = await MovieModel._deleteMovie(req)
 
     const result = {
       success: true,
