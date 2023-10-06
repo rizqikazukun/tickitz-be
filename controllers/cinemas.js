@@ -1,4 +1,3 @@
-
 const CinemasModel = require('../models/cinemas')
 
 const getCinemas = async (req, res) => {
@@ -8,7 +7,7 @@ const getCinemas = async (req, res) => {
     if (cinemas.length === 0) {
       res.status(404).json({
         success: false,
-        message: 'Not Found'
+        message: 'Not Found',
       })
       return
     }
@@ -16,14 +15,14 @@ const getCinemas = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'OK',
-      data: cinemas
+      data: cinemas,
     })
   } catch (error) {
     console.log(error)
     res.status(502).json({
       success: false,
       message: 'Bad Gateway',
-      data: []
+      data: [],
     })
   }
 }
@@ -35,7 +34,7 @@ const getSpesificCinema = async (req, res) => {
     if (typeof Number(id) !== typeof Number()) {
       res.status(404).json({
         success: false,
-        message: 'Bad Input, please insert proper id'
+        message: 'Bad Input, please insert proper id',
       })
       return
     }
@@ -46,7 +45,7 @@ const getSpesificCinema = async (req, res) => {
       res.status(404).json({
         success: false,
         message: 'Not Found',
-        data: cinemas
+        data: cinemas,
       })
       return
     }
@@ -54,47 +53,45 @@ const getSpesificCinema = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'OK',
-      data: cinemas
+      data: cinemas,
     })
   } catch (error) {
     console.log(error)
     res.status(502).json({
       success: false,
       message: 'Bad Gateway',
-      data: []
+      data: [],
     })
   }
 }
 
 const addCinemas = async (req, res) => {
   try {
-
     const cinemas = await CinemasModel._addCinema(req)
 
     res.status(200).json({
       success: true,
       message: 'Data inserted',
-      data: cinemas
+      data: cinemas,
     })
   } catch (error) {
     console.log(error)
     res.status(502).json({
       success: false,
       message: 'Bad Gateway',
-      data: []
+      data: [],
     })
   }
 }
 
 const updateCinema = async (req, res) => {
   try {
-
     const movies = await CinemasModel._udateCinema(req)
 
     if (movies.length === 0) {
       res.status(404).json({
         success: false,
-        message: 'Not Found'
+        message: 'Not Found',
       })
       return
     }
@@ -102,7 +99,7 @@ const updateCinema = async (req, res) => {
     const result = {
       success: true,
       message: 'Data Updated',
-      data: movies
+      data: movies,
     }
     console.log(result)
     res.status(200).json(result)
@@ -111,24 +108,22 @@ const updateCinema = async (req, res) => {
     const result = {
       success: false,
       message: 'Internal Application Error',
-      data: []
+      data: [],
     }
     return res.status(500).json(result)
     // don't remove return or it will buggy
   }
 }
 
-
 const deleteCinema = async (req, res) => {
   try {
-
     const cinemas = await CinemasModel._deleteCinema(req)
-    console.log("🚀 ~ file: cinemas.js:119 ~ deleteCinema ~ cinemas:", cinemas)
+    console.log('🚀 ~ file: cinemas.js:119 ~ deleteCinema ~ cinemas:', cinemas)
 
-    if (cinemas.length === 0 ){
+    if (cinemas.length === 0) {
       res.status(404).json({
         success: false,
-        message: 'Delete Failed, Not Found'
+        message: 'Delete Failed, Not Found',
       })
       return
     }
@@ -136,7 +131,7 @@ const deleteCinema = async (req, res) => {
     const result = {
       success: true,
       message: 'Data Deleted',
-      data: cinemas
+      data: cinemas,
     }
     console.log(result)
     res.status(200).json(result)
@@ -145,11 +140,17 @@ const deleteCinema = async (req, res) => {
     const result = {
       success: false,
       message: 'Internal Application Error',
-      data: []
+      data: [],
     }
     return res.status(500).json(result)
     // don't remove return or it will buggy
   }
 }
 
-module.exports = { getCinemas, getSpesificCinema, addCinemas, updateCinema, deleteCinema }
+module.exports = {
+  getCinemas,
+  getSpesificCinema,
+  addCinemas,
+  updateCinema,
+  deleteCinema,
+}

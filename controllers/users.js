@@ -142,7 +142,7 @@ class UsersController {
 
   static async updateUserPassword(req, res) {
     try {
-      const users = UserModels._updateUserPassword(req)
+      const users = await UserModels._updateUserPassword(req)
       res.status(200).json({
         success: true,
         message: 'Password Updated',
@@ -153,7 +153,6 @@ class UsersController {
       res.status(500).json({
         success: false,
         message: 'Internal Application Error',
-        data: [],
       })
       return
     }

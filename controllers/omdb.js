@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-const sql = require('../utils')
+const sql = require('../utils/postgreConnection')
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()

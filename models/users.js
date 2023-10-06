@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-const sql = require('../utils')
+const sql = require('../utils/postgreConnection')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
