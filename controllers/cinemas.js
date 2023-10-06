@@ -1,15 +1,14 @@
-/* eslint-disable camelcase */
-const sql = require('../utils')
+
+const CinemasModel = require('../models/cinemas')
 
 const getCinemas = async (req, res) => {
   try {
-    const cinemas = await sql`SELECT * FROM cinemas`
+    const cinemas = await CinemasModel._getListCinemas
 
     if (cinemas.length === 0) {
       res.status(404).json({
         success: false,
-        message: 'Not Found',
-        data: cinemas
+        message: 'Not Found'
       })
       return
     }
@@ -41,7 +40,7 @@ const getSpesificCinema = async (req, res) => {
       return
     }
 
-    const cinemas = await sql`SELECT * FROM cinemas WHERE id=${id}`
+    const cinemas = await CinemasModel._getSelectedCinema(id)
 
     if (cinemas.length === 0) {
       res.status(404).json({
@@ -69,22 +68,8 @@ const getSpesificCinema = async (req, res) => {
 
 const addCinemas = async (req, res) => {
   try {
-    const { movie_id, name, city, address, show_times, price, logo } = req.body
 
-    if (!name) {
-      res.status(400).json({
-        success: false,
-        message: 'Bad Input'
-      })
-      return
-    }
-
-    const cinemas = await sql`
-        insert into cinemas
-          (movie_id, name, city, address, show_times, price, logo)
-        values
-          (${movie_id},${name},${city},${address},${show_times},${price},${logo})
-        returning id`
+    const cinemas = await CinemasModel._addCinema(req)
 
     res.status(200).json({
       success: true,
@@ -103,27 +88,8 @@ const addCinemas = async (req, res) => {
 
 const updateCinema = async (req, res) => {
   try {
-    const { id } = req.params
-    const { movie_id, name, city, address, show_times, price, logo } = req.body
 
-    if (!id) {
-      const result = {
-        success: false,
-        message: 'Bad Input, please insert proper id',
-        data: []
-      }
-      res.status(400).json(result)
-    }
-
-    const movies = await sql`update cinemas set
-    name=${name},
-    movie_id=${movie_id},
-    city=${city},
-    address=${address},
-    show_times=${show_times},
-    price=${price},
-    logo=${logo}
-    where id=${id} RETURNING id;`
+    const movies = await CinemasModel._udateCinema(req)
 
     const result = {
       success: true,
@@ -147,19 +113,17 @@ const updateCinema = async (req, res) => {
 
 const deleteCinema = async (req, res) => {
   try {
-    const { id } = req.params
 
-    if (!id) {
-      const result = {
+    const cinemas = await CinemasModel._deleteCinema(req)
+    console.log("🚀 ~ file: cinemas.js:119 ~ deleteCinema ~ cinemas:", cinemas)
+
+    if (cinemas.length === 0 ){
+      res.status(404).json({
         success: false,
-        message: 'Bad Input, please insert proper id',
-        data: []
-      }
-      res.status(400).json(result)
+        message: 'Delete Failed, Not Found'
+      })
       return
     }
-
-    const cinemas = await sql`DELETE FROM cinemas where id=${id} RETURNING id;`
 
     const result = {
       success: true,
