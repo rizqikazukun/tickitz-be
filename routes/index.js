@@ -1,8 +1,22 @@
 const router = require('express').Router()
 
-const { getMovies, getDetailMovie, addMovie, updateMovie, deleteMovie } = require('../controllers/movies')
-const { getCinemas, getSpesificCinema, addCinemas, updateCinema, deleteCinema } = require('../controllers/cinemas')
-const Users = require('../controllers/users')
+const {
+  getMovies,
+  getDetailMovie,
+  addMovie,
+  updateMovie,
+  deleteMovie,
+} = require('../controllers/movies')
+
+const {
+  getCinemas,
+  getSpesificCinema,
+  addCinemas,
+  updateCinema,
+  deleteCinema,
+} = require('../controllers/cinemas')
+
+const UsersController = require('../controllers/users')
 const { addMovieByImdb } = require('../controllers/omdb')
 const auth = require('../middlewares/jwtAuth')
 
@@ -22,11 +36,11 @@ router.put('/cinemas/:id', updateCinema)
 router.delete('/cinemas/:id', deleteCinema)
 
 // ENDPOINT USERS
-router.get('/users',auth, Users.getListUser)
-router.get('/users/me', auth, Users.getDetailUser)
-router.post('/users/register', Users.addUser)
-router.post('/users/login', Users.loginUser)
-router.put('/users/edit', Users.updateUser)
-router.put('/users/edit/password', Users.updateUserPassword)
+router.get('/users', auth, UsersController.getListUser)
+router.get('/users/me', auth, UsersController.getDetailUser)
+router.post('/users/register', UsersController.userRegister)
+router.post('/users/login', UsersController.loginUser)
+router.put('/users/edit', UsersController.updateUser)
+router.put('/users/edit/password', UsersController.updateUserPassword)
 
 module.exports = router
