@@ -44,7 +44,7 @@ class CinemasModel {
     }
 
     static async _deleteCinema(payload) {
-        const { id } =  payload.params
+        const { id } = payload.params
         const cinemas = await sql`DELETE FROM cinemas where id=${id} RETURNING id;`
         return cinemas
     }

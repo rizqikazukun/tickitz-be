@@ -3,7 +3,7 @@ const CinemasModel = require('../models/cinemas')
 
 const getCinemas = async (req, res) => {
   try {
-    const cinemas = await CinemasModel._getListCinemas
+    const cinemas = await CinemasModel._getListCinemas()
 
     if (cinemas.length === 0) {
       res.status(404).json({
@@ -90,6 +90,14 @@ const updateCinema = async (req, res) => {
   try {
 
     const movies = await CinemasModel._udateCinema(req)
+
+    if (movies.length === 0) {
+      res.status(404).json({
+        success: false,
+        message: 'Not Found'
+      })
+      return
+    }
 
     const result = {
       success: true,
