@@ -1,17 +1,24 @@
 {
-    "env": {
-        "commonjs": true,
-        "es2021": true,
-        "node": true
-    },
-    "parserOptions": {
-        "ecmaVersion": "latest"
-    },
-    "extends": ["prettier"],
-    "plugins": ["prettier"],
-    "rules": {
-      "prettier/prettier": ["error", {"semi": false, "singleQuote": true}],
-      "arrow-body-style": "off",
-      "prefer-arrow-callback": "off"
-    }
+  "env": {
+    "commonjs": true,
+    "es2021": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "extends": ["prettier"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "semi": false,
+        "singleQuote": true,
+        "trailingComma": "none"
+      }
+    ],
+    "arrow-body-style": "off",
+    "prefer-arrow-callback": "off"
+  }
 }
