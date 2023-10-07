@@ -2,10 +2,22 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const UserModels = require('../models/users')
+const Joi = require('joi')
 
 class UsersController {
   static async userRegister(req, res) {
     try {
+      const schema = Joi.object({
+        first_name: Joi.string().min(1).max(20).required(),
+        last_name: Joi.string().min(1).max(20).required(),
+        phone_number: Joi.string().min(1).max(15).allow(''),
+        email: Joi.string().email().required(),
+        password: Joi.string().min(8).max(100).required(),
+        photo_profile: Joi.string().uri().allow(''),
+      })
+
+      await schema.validateAsync(req.body)
+
       const user = await UserModels._userRegister(req)
 
       res.status(201).json({
@@ -34,31 +46,24 @@ class UsersController {
 
   static async loginUser(req, res) {
     try {
-      const { password } = req.body
+      const schema = Joi.object({
+        email: Joi.string().email().required(),
+        password: Joi.string().required(),
+      })
 
+      await schema.validateAsync(req.body)
+
+      const { password } = req.body
       const userData = await UserModels._userLogin(req)
 
       if (userData.length === 0) {
-        res.status(400).json({
-          success: false,
-          message: 'Bad Input, Email Not Registered',
-        })
-        return
+        throw { message: 'Email Not Registered' }
       }
-
-      console.log(
-        '🚀 ~ file: users.js:78 ~ Users ~ loginUser ~ userData:',
-        userData,
-      )
 
       const match = await bcrypt.compare(password, userData[0].password)
 
       if (!match) {
-        res.status(401).json({
-          success: false,
-          message: 'login failed',
-        })
-        return
+        throw { message: 'Password Incorrect' }
       }
 
       const accessToken = await jwt.sign(
@@ -76,6 +81,16 @@ class UsersController {
       })
     } catch (error) {
       console.log(error)
+      if (
+        error.message === '"email" must be a valid email' ||
+        error.message === '"password" must be a string'
+      ) {
+        res.status(422).json({
+          success: false,
+          message: error.message,
+        })
+        return
+      }
       res.status(502).json({
         success: false,
         message: 'Internal Application Error',
@@ -121,6 +136,16 @@ class UsersController {
 
   static async updateUser(req, res) {
     try {
+      const schema = Joi.object({
+        first_name: Joi.string().min(1).max(20).required(),
+        last_name: Joi.string().min(1).max(20).required(),
+        phone_number: Joi.string().min(1).max(15).allow(''),
+        email: Joi.string().email().required(),
+        photo_profile: Joi.string().uri().allow(''),
+      })
+
+      await schema.validateAsync(req.body)
+
       const users = await UserModels._updateUser(req)
 
       res.status(200).json({
@@ -142,6 +167,12 @@ class UsersController {
 
   static async updateUserPassword(req, res) {
     try {
+      const schema = Joi.object({
+        password: Joi.string().required(),
+      })
+
+      await schema.validateAsync(req.body)
+
       const users = await UserModels._updateUserPassword(req)
       res.status(200).json({
         success: true,

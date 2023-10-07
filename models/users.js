@@ -45,14 +45,15 @@ class UserModels {
   static async _updateUser(payload) {
     const token = payload.headers.authorization.split('Bearer ')[1]
     const { id } = jwt.decode(token, process.env.JWT_SECRET)
-    const { first_name, last_name, phone_number, email } = payload.body
+    const { first_name, last_name, phone_number, email, photo_profile } = payload.body
 
     const users = await sql`
           update users set
           first_name=${first_name},
           last_name=${last_name},
           phone_number=${phone_number},
-          email=${email}
+          email=${email},
+          photo_profile=${photo_profile}
           where id=${id} RETURNING id;`
 
     return users

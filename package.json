@@ -1,6 +1,6 @@
 {
   "name": "tickitz-be",
-  "description": "It's a tickitz backend. learning base project from pijarcamp.  ",
+  "description": "It's a tickitz backend. learning base project from pijarcamp.",
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
@@ -9,6 +9,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "helmet": "^7.0.0",
+    "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
     "postgres": "^3.3.5"
   },
