@@ -1,4 +1,5 @@
 const CinemasModel = require('../models/cinemas')
+const Joi = require('joi')
 
 const getCinemas = async (req, res) => {
   try {
@@ -31,13 +32,11 @@ const getSpesificCinema = async (req, res) => {
   try {
     const { id } = req.params
 
-    if (typeof Number(id) !== typeof Number()) {
-      res.status(404).json({
-        success: false,
-        message: 'Bad Input, please insert proper id',
-      })
-      return
-    }
+    const schema = Joi.object({
+      id: Joi.string().required(),
+    })
+
+    await schema.validateAsync(req.params)
 
     const cinemas = await CinemasModel._getSelectedCinema(id)
 
@@ -67,6 +66,18 @@ const getSpesificCinema = async (req, res) => {
 
 const addCinemas = async (req, res) => {
   try {
+    const schema = Joi.object({
+      movie_id: Joi.number().required(),
+      name: Joi.string().min(1).max(100).required(),
+      city: Joi.string().min(1).max(50).allow(''),
+      address: Joi.string().min(1).max(150).allow(''),
+      show_times: Joi.array().items(Joi.string().min(5).max(5).required()),
+      price: Joi.number().min(10000).max(10000000).required(),
+      logo: Joi.string().uri().allow(''),
+    })
+
+    await schema.validateAsync(req.body)
+
     const cinemas = await CinemasModel._addCinema(req)
 
     res.status(200).json({
@@ -86,6 +97,23 @@ const addCinemas = async (req, res) => {
 
 const updateCinema = async (req, res) => {
   try {
+    const paramSchema = Joi.object({
+      id: Joi.string().required(),
+    })
+
+    const bodySchema = Joi.object({
+      movie_id: Joi.number().required(),
+      name: Joi.string().min(1).max(100).required(),
+      city: Joi.string().min(1).max(50).allow(''),
+      address: Joi.string().min(1).max(150).allow(''),
+      show_times: Joi.array().items(Joi.string().min(5).max(5).required()),
+      price: Joi.number().min(10000).max(10000000).required(),
+      logo: Joi.string().uri().allow(''),
+    })
+
+    await paramSchema.validateAsync(req.params)
+    await bodySchema.validateAsync(req.body)
+
     const movies = await CinemasModel._udateCinema(req)
 
     if (movies.length === 0) {
@@ -104,7 +132,7 @@ const updateCinema = async (req, res) => {
     console.log(result)
     res.status(200).json(result)
   } catch (error) {
-    console.log(error.message)
+    console.log(error)
     const result = {
       success: false,
       message: 'Internal Application Error',
@@ -117,8 +145,13 @@ const updateCinema = async (req, res) => {
 
 const deleteCinema = async (req, res) => {
   try {
+    const schema = Joi.object({
+      id: Joi.string().required(),
+    })
+
+    await schema.validateAsync(req.params)
+
     const cinemas = await CinemasModel._deleteCinema(req)
-    console.log('🚀 ~ file: cinemas.js:119 ~ deleteCinema ~ cinemas:', cinemas)
 
     if (cinemas.length === 0) {
       res.status(404).json({
