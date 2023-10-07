@@ -1,8 +1,15 @@
 /* eslint-disable camelcase */
-const MovieModel = require('../models/movies')
+const Joi = require('joi')
 
+const MovieModel = require('../models/movies')
 const getMovies = async (req, res) => {
   try {
+    const schema = Joi.object({
+      search: Joi.string().allow('').optional(),
+      year: Joi.string().allow('').optional(),
+    })
+
+    await schema.validateAsync(req.query)
     const movies = await MovieModel._getListMovies(req)
 
     if (movies.length === 0) {
@@ -31,15 +38,11 @@ const getMovies = async (req, res) => {
 
 const getDetailMovie = async (req, res) => {
   try {
-    const { id } = req.params
+    const schema = Joi.object({
+      id: Joi.string().required(),
+    })
 
-    if (typeof Number(id) !== typeof Number()) {
-      res.status(404).json({
-        success: false,
-        message: 'Bad Input, please insert proper id',
-      })
-      return
-    }
+    await schema.validateAsync(req.params)
 
     const movies = await MovieModel._getDetailMovie(req)
 
@@ -69,6 +72,19 @@ const getDetailMovie = async (req, res) => {
 
 const addMovie = async (req, res) => {
   try {
+    const schema = Joi.object({
+      name: Joi.string().min(1).max(150).required(),
+      release_date: Joi.date().required(),
+      duration: Joi.string().allow(''),
+      genres: Joi.array().items(Joi.string().min(5).max(20).allow('')),
+      directed_by: Joi.string().allow(''),
+      casts: Joi.array().items(Joi.string().min(5).max(30).allow('')),
+      synopsis: Joi.string().allow(''),
+      poster: Joi.string().uri().allow(''),
+    })
+
+    await schema.validateAsync(req.body)
+
     const movies = await MovieModel._addMovie(req)
 
     res.status(200).json({
@@ -88,6 +104,23 @@ const addMovie = async (req, res) => {
 
 const updateMovie = async (req, res) => {
   try {
+    const paramSchema = Joi.object({
+      id: Joi.string().required(),
+    })
+    const bodySchema = Joi.object({
+      name: Joi.string().min(1).max(150).required(),
+      release_date: Joi.date().required(),
+      duration: Joi.string().allow(''),
+      genres: Joi.array().items(Joi.string().min(5).max(20).allow('')),
+      directed_by: Joi.string().allow(''),
+      casts: Joi.array().items(Joi.string().min(5).max(30).allow('')),
+      synopsis: Joi.string().allow(''),
+      poster: Joi.string().uri().allow(''),
+    })
+
+    await paramSchema.validateAsync(req.params)
+    await bodySchema.validateAsync(req.body)
+
     const movies = await MovieModel._updateMovie(req)
 
     if (movies.length === 0) {
@@ -104,7 +137,7 @@ const updateMovie = async (req, res) => {
       data: movies,
     })
   } catch (error) {
-    console.log(error.message)
+    console.log(error)
     res.status(500).json({
       success: false,
       message: 'Internal Application Error',
@@ -117,6 +150,11 @@ const updateMovie = async (req, res) => {
 
 const deleteMovie = async (req, res) => {
   try {
+    const schema = Joi.object({
+      id: Joi.string().required(),
+    })
+    await schema.validateAsync(req.params)
+
     const movies = await MovieModel._deleteMovie(req)
 
     if (movies.length === 0) {
