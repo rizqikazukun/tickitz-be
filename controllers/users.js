@@ -145,7 +145,7 @@ class UsersController {
     }
   }
 
-  static async updateUserEmail(req, res, next) {
+  static async _updateUserEmail(req, res, next) {
     try {
       const schema = Joi.object({
         email: Joi.string().email().required()

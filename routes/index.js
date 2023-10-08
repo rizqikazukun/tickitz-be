@@ -44,6 +44,14 @@ router.post('/users/login', UsersController.loginUser, userErrorHandler)
 router.get('/users', auth, UsersController.getListUser, userErrorHandler)
 router.get('/users/me', auth, UsersController.getDetailUser, userErrorHandler)
 router.put('/users/edit', auth, UsersController.updateUser, userErrorHandler)
+
+router.put(
+  '/users/edit/email',
+  auth,
+  UsersController._updateUserEmail,
+  userErrorHandler
+)
+
 router.put(
   '/users/edit/password',
   auth,
