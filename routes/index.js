@@ -21,6 +21,7 @@ const { addMovieByImdb } = require('../controllers/omdb')
 const auth = require('../middlewares/jwtAuth')
 const userErrorHandler = require('../middlewares/userErrorHandler')
 const movieErrorHandler = require('../middlewares/movieErrorHandler')
+const cinemaErrorHandler = require('../middlewares/cinemaErrorHandler')
 
 // ENDPOINT MOVIES
 router.get('/movies', getMovies, movieErrorHandler)
@@ -31,11 +32,11 @@ router.put('/movies/:id', auth, updateMovie, movieErrorHandler)
 router.delete('/movies/:id', auth, deleteMovie, movieErrorHandler)
 
 // ENDPOINT CINEMAS
-router.get('/cinemas', getCinemas)
-router.get('/cinemas/:id', getSpesificCinema)
-router.post('/cinemas', auth, addCinemas)
-router.put('/cinemas/:id', auth, updateCinema)
-router.delete('/cinemas/:id', auth, deleteCinema)
+router.get('/cinemas', getCinemas, cinemaErrorHandler)
+router.get('/cinemas/:id', getSpesificCinema, cinemaErrorHandler)
+router.post('/cinemas', auth, addCinemas, cinemaErrorHandler)
+router.put('/cinemas/:id', auth, updateCinema, cinemaErrorHandler)
+router.delete('/cinemas/:id', auth, deleteCinema, cinemaErrorHandler)
 
 // ENDPOINT USERS
 router.post('/users/register', UsersController.userRegister, userErrorHandler)
