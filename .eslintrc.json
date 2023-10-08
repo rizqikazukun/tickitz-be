@@ -15,7 +15,8 @@
       {
         "semi": false,
         "singleQuote": true,
-        "trailingComma": "none"
+        "trailingComma": "none",
+        "endOfLine": "auto"
       }
     ],
     "arrow-body-style": "off",
