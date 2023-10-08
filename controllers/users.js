@@ -5,7 +5,7 @@ const UserModels = require('../models/users')
 const Joi = require('joi')
 
 class UsersController {
-  static async userRegister(req, res) {
+  static async userRegister(req, res, next) {
     try {
       const schema = Joi.object({
         first_name: Joi.string().min(1).max(20).required(),
@@ -13,42 +13,30 @@ class UsersController {
         phone_number: Joi.string().min(1).max(15).allow(''),
         email: Joi.string().email().required(),
         password: Joi.string().min(8).max(100).required(),
-        photo_profile: Joi.string().uri().allow(''),
+        photo_profile: Joi.string().uri().allow('')
       })
 
+      // Joi will automatically throw error to catch
       await schema.validateAsync(req.body)
 
+      // Postgress will automatically throw error to catch
       const user = await UserModels._userRegister(req)
 
       res.status(201).json({
         success: true,
         message: 'created',
-        data: user,
+        data: user
       })
     } catch (error) {
-      console.log(error)
-      if (
-        error.message ===
-        'duplicate key value violates unique constraint "unique_email"'
-      ) {
-        res.status(400).json({
-          success: false,
-          message: 'Bad Input',
-        })
-        return
-      }
-      res.status(502).json({
-        success: false,
-        message: 'Bad Gateway',
-      })
+      next(error)
     }
   }
 
-  static async loginUser(req, res) {
+  static async loginUser(req, res, next) {
     try {
       const schema = Joi.object({
         email: Joi.string().email().required(),
-        password: Joi.string().required(),
+        password: Joi.string().required()
       })
 
       await schema.validateAsync(req.body)
@@ -57,135 +45,134 @@ class UsersController {
       const userData = await UserModels._userLogin(req)
 
       if (userData.length === 0) {
-        throw { message: 'Email Not Registered' }
+        throw { type: 'user', message: 'Email Not Registered' }
       }
 
       const match = await bcrypt.compare(password, userData[0].password)
 
       if (!match) {
-        throw { message: 'Password Incorrect' }
+        throw { type: 'user', message: 'Password Incorrect' }
       }
 
       const accessToken = await jwt.sign(
         {
           id: userData[0].id,
-          email: userData[0].email,
+          email: userData[0].email
         },
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET
       )
 
       res.status(200).json({
         success: true,
         message: 'login success',
-        accessToken,
+        accessToken
       })
     } catch (error) {
-      console.log(error)
-      if (
-        error.message === '"email" must be a valid email' ||
-        error.message === '"password" must be a string'
-      ) {
-        res.status(422).json({
-          success: false,
-          message: error.message,
-        })
-        return
-      }
-      res.status(502).json({
-        success: false,
-        message: 'Internal Application Error',
-      })
+      next(error)
     }
   }
 
-  static async getListUser(req, res) {
+  static async getListUser(req, res, next) {
     try {
       const userData = await UserModels._getListUser()
 
+      if (userData.length === 0) {
+        throw {
+          type: 'db_user',
+          message: 'No user found',
+          reason: ''
+        }
+      }
+
       res.status(200).json({
         success: true,
         message: 'OK',
-        data: userData,
+        data: userData
       })
     } catch (error) {
-      console.log(error)
-      res.status(502).json({
-        success: false,
-        message: 'Internal Application Error',
-      })
+      next(error)
     }
   }
 
-  static async getDetailUser(req, res) {
+  static async getDetailUser(req, res, next) {
     try {
       const userData = await UserModels._getDetailUser(req)
 
+      if (userData.length === 0) {
+        throw {
+          type: 'db_user',
+          message: 'No user found',
+          reason: 'User has been deleted'
+        }
+      }
+
       res.status(200).json({
         success: true,
         message: 'OK',
-        data: userData,
+        data: userData
       })
     } catch (error) {
-      console.log(error)
-      res.status(502).json({
-        success: false,
-        message: 'Internal Application Error',
-      })
+      next(error)
     }
   }
 
-  static async updateUser(req, res) {
+  static async updateUser(req, res, next) {
     try {
       const schema = Joi.object({
         first_name: Joi.string().min(1).max(20).required(),
         last_name: Joi.string().min(1).max(20).required(),
         phone_number: Joi.string().min(1).max(15).allow(''),
         email: Joi.string().email().required(),
-        photo_profile: Joi.string().uri().allow(''),
+        photo_profile: Joi.string().uri().allow('')
       })
 
       await schema.validateAsync(req.body)
 
-      const users = await UserModels._updateUser(req)
+      const userData = await UserModels._updateUser(req)
+
+      if (userData.length === 0) {
+        throw {
+          type: 'db_user',
+          message: 'No user found',
+          reason: 'User has been deleted'
+        }
+      }
 
       res.status(200).json({
         success: true,
         message: 'Data Updated',
-        data: users,
+        data: userData
       })
     } catch (error) {
-      console.log(error.message)
-      res.status(500).json({
-        success: false,
-        message: 'Internal Application Error',
-        data: [],
-      })
-
-      // don't remove return or it will buggy
+      next(error)
     }
   }
 
-  static async updateUserPassword(req, res) {
+  static async updateUserPassword(req, res, next) {
     try {
       const schema = Joi.object({
-        password: Joi.string().required(),
+        password: Joi.string().required()
       })
 
       await schema.validateAsync(req.body)
 
-      const users = await UserModels._updateUserPassword(req)
+      const userData = await UserModels._updateUserPassword(req)
+
+      if (userData.length === 0) {
+        throw {
+          type: 'db_user',
+          message: 'No user found',
+          reason: 'User has been deleted'
+        }
+      }
+
       res.status(200).json({
         success: true,
         message: 'Password Updated',
-        data: users,
+        data: userData
       })
     } catch (error) {
-      console.log(error.message)
-      res.status(500).json({
-        success: false,
-        message: 'Internal Application Error',
-      })
-      return
+      next(error)
     }
   }
 }
