@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken')
 
-const auth = async (req, res, next) => {
+const adminAuth = async (req, res, next) => {
   try {
     const token = req.headers.authorization.split('Bearer ')[1]
-    const auth = await jwt.verify(token, process.env.JWT_SECRET)
+    const auth = jwt.verify(token, process.env.JWT_SECRET)
+    const { role } = jwt.decode(token, process.env.JWT_SECRET)
 
-    if (auth) {
+    if (auth && role === 'admin') {
       next()
     }
   } catch (error) {
@@ -17,4 +18,4 @@ const auth = async (req, res, next) => {
   }
 }
 
-module.exports = auth
+module.exports = adminAuth

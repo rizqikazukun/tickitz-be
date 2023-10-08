@@ -55,6 +55,7 @@ class UsersController {
       const accessToken = await jwt.sign(
         {
           uid: userData[0].uid,
+          role: userData[0].role,
           email: userData[0].email
         },
         process.env.JWT_SECRET
