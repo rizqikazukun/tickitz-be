@@ -1,0 +1,644 @@
+{
+	"info": {
+		"_postman_id": "d3c05182-76bf-44bb-82e7-ad5c4dd3c27e",
+		"name": "tickitz-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17089615"
+	},
+	"item": [
+		{
+			"name": "Movies",
+			"item": [
+				{
+					"name": "[Require] Movie list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/movies",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Require] Movie detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"id\", pm.response.json().data[0].id)\r",
+									"pm.environment.set(\"name\", pm.response.json().data[0].name)\r",
+									"pm.environment.set(\"release_date\", pm.response.json().data[0].release_date)\r",
+									"pm.environment.set(\"duration\", pm.response.json().data[0].duration)\r",
+									"pm.environment.set(\"genres\", JSON.stringify(pm.response.json().data[0].genres))\r",
+									"pm.environment.set(\"directedby\", pm.response.json().data[0].directed_by)\r",
+									"pm.environment.set(\"casts\", JSON.stringify(pm.response.json().data[0].casts))\r",
+									"pm.environment.set(\"synopsis\", pm.response.json().data[0].synopsis)\r",
+									"pm.environment.set(\"poster\", pm.response.json().data[0].poster)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/movies/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"movies",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Optional] Search movie + Sort by year",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/movies?search=hau&year=desc",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"movies"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "hau",
+									"description": "Search anything like a keyword"
+								},
+								{
+									"key": "year",
+									"value": "desc",
+									"description": "Sorting by year [ default by name | desc | asc | else by id ]"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Require] Add movie",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"a\",\r\n  \"release_date\": \"2014-04-11T00:00:00.000Z\",\r\n  \"duration\": \"113 min\",\r\n  \"genres\": [\r\n      \"Comedy\",\r\n      \"Drama\",\r\n      \"Romance\"\r\n  ],\r\n  \"directed_by\": \"Taisuke Kawamura\",\r\n  \"casts\": [\r\n      \"Comedy\",\r\n      \"Drama\",\r\n      \"Romance\"\r\n  ],\r\n  \"synopsis\": \"Aoi lives in an apartment by herself. Shusei moves in next to Aoi's apartment. Shusei is a very popular student. Due to a mistake, Aoi makes the sprinkler go off in his room. Until his room is fixed, he stays with Aoi.\",\r\n  \"poster\": \"https://m.media-amazon.com/images/M/MV5BNTYwOGEyMGItMjcyYS00ZDgzLWJmYjEtNWEwODMyNzc1NDExXkEyXkFqcGdeQXVyNTI4MDA2NDE@._V1_SX300.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/movies",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Improve] Add movie by imdb id",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"imdbId\": \"tt1695843\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/movies/imdb",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"movies",
+								"imdb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Require] Update Movie",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\n            \"name\": \"Barbie Z\",\n            \"release_date\": \"2023-07-20T00:00:00.000Z\",\n            \"duration\": \"114 min\",\n            \"genres\": [\n                \"Adventure\",\n                \"Comedy\",\n                \"Fantasy\"\n            ],\n            \"directed_by\": \"Greta Gerwig\",\n            \"casts\": [\n                \"Margot Robbie\",\n                \"Ryan Gosling\",\n                \"Issa Rae\"\n            ],\n            \"synopsis\": \"Barbie suffers a crisis that leads her to question her world and her existence.\",\n            \"poster\": \"https://m.media-amazon.com/images/M/MV5BNjU3N2QxNzYtMjk1NC00MTc4LTk1NTQtMmUxNTljM2I0NDA5XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_SX300.jpg\"\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/movies/3",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"movies",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Require] Delete Movie",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/movies/5",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"movies",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contain movie api from tickitz be",
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{ticAccessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Cinemas",
+			"item": [
+				{
+					"name": "[Require] Cinema list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/cinemas",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cinemas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Require] Cinema detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/cinemas/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cinemas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Require] Add cinema",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\r\n            \"movie_id\": \"10\",\r\n            \"name\": \"CGV Cinemas Pacific Place\",\r\n            \"city\": \"South Jakarta\",\r\n            \"address\": \"Pacific Place Lt. 6. Jln. Jend. Sudirman Kav 52-53, SCBD Jakarta\",\r\n            \"show_times\": [\r\n                \"11:30\",\r\n                \"14:00\",\r\n                \"16:30\",\r\n                \"19:00\",\r\n                \"19:50\",\r\n                \"21:30\"\r\n            ],\r\n            \"price\": 75000,\r\n            \"logo\": \"https://upload.wikimedia.org/wikipedia/commons/6/6c/CGV_Cinemas.svg\"\r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/cinemas",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cinemas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Require] Update cinema",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n            \"movie_id\": 5,\n            \"name\": \"CGV Cinemas Pacific Place Z\",\n            \"city\": \"South Jakarta\",\n            \"address\": \"Pacific Place Lt. 6. Jln. Jend. Sudirman Kav 52-53, SCBD Jakarta\",\n            \"show_times\": [\n                \"11:30\",\n                \"14:00\",\n                \"16:30\",\n                \"19:00\",\n                \"19:50\",\n                \"21:30\"\n            ],\n            \"price\": 75000,\n            \"logo\": \"https://upload.wikimedia.org/wikipedia/commons/6/6c/CGV_Cinemas.svg\"\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/cinemas/10",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cinemas",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Require] Delete cinema",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/cinemas/11",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cinemas",
+								"11"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contain movie api from tickitz be",
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{ticAccessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Users list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/users",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/users/me",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"rizqi@example.com\",\n    \"password\": \"IniPasswordBaru\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/users/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\" : \"Sasuke\",\n    \"last_name\": \"Uciha\",\n    \"email\" : \"ucihasasuke@example.com\",\n    \"password\" : \"iniPasswordSaya\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/users/register",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\n            \"first_name\": \"{{$randomFirstName}}\",\n            \"last_name\": \"{{$randomLastName}}\",\n            \"phone_number\": \"{{$randomPhoneNumber}}\",\n            \"photo_profile\": \"{{$randomAvatarImage}}\"\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/users/edit",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User's Email Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"rizqi@example.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/users/edit/email",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"edit",
+								"email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User's Password Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"IniPasswordBaru\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/users/edit/password",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"edit",
+								"password"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contain movie api from tickitz be",
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{ticAccessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "accessToken",
+			"value": ""
+		}
+	]
+}
