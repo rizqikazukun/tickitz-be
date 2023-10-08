@@ -20,14 +20,15 @@ const UsersController = require('../controllers/users')
 const { addMovieByImdb } = require('../controllers/omdb')
 const auth = require('../middlewares/jwtAuth')
 const userErrorHandler = require('../middlewares/userErrorHandler')
+const movieErrorHandler = require('../middlewares/movieErrorHandler')
 
 // ENDPOINT MOVIES
-router.get('/movies', getMovies)
-router.get('/movies/:id', getDetailMovie)
-router.post('/movies', auth, addMovie)
-router.post('/movies/imdb', auth, addMovieByImdb)
-router.put('/movies/:id', auth, updateMovie)
-router.delete('/movies/:id', auth, deleteMovie)
+router.get('/movies', getMovies, movieErrorHandler)
+router.get('/movies/:id', getDetailMovie, movieErrorHandler)
+router.post('/movies', auth, addMovie, movieErrorHandler)
+router.post('/movies/imdb', auth, addMovieByImdb, movieErrorHandler)
+router.put('/movies/:id', auth, updateMovie, movieErrorHandler)
+router.delete('/movies/:id', auth, deleteMovie, movieErrorHandler)
 
 // ENDPOINT CINEMAS
 router.get('/cinemas', getCinemas)

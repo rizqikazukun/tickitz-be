@@ -2,44 +2,37 @@
 const Joi = require('joi')
 
 const MovieModel = require('../models/movies')
-const getMovies = async (req, res) => {
+const getMovies = async (req, res, next) => {
   try {
     const schema = Joi.object({
       search: Joi.string().allow('').optional(),
-      year: Joi.string().allow('').optional(),
+      year: Joi.string().allow('').optional()
     })
 
     await schema.validateAsync(req.query)
     const movies = await MovieModel._getListMovies(req)
 
     if (movies.length === 0) {
-      res.status(404).json({
+      throw {
         success: false,
-        message: 'Not Found',
-        data: movies,
-      })
-      return
+        message: 'Not Found'
+      }
     }
 
     res.status(200).json({
       success: true,
       message: 'OK',
-      data: movies,
+      data: movies
     })
   } catch (error) {
-    console.log(error)
-    res.status(502).json({
-      success: false,
-      message: 'Bad Gateway',
-      data: [],
-    })
+    next(error)
   }
 }
 
-const getDetailMovie = async (req, res) => {
+const getDetailMovie = async (req, res, next) => {
   try {
     const schema = Joi.object({
-      id: Joi.string().required(),
+      id: Joi.string().required()
     })
 
     await schema.validateAsync(req.params)
@@ -47,30 +40,23 @@ const getDetailMovie = async (req, res) => {
     const movies = await MovieModel._getDetailMovie(req)
 
     if (movies.length === 0) {
-      res.status(404).json({
+      throw {
         success: false,
-        message: 'Not Found',
-        data: movies,
-      })
-      return
+        message: 'Not Found'
+      }
     }
 
     res.status(200).json({
       success: true,
       message: 'OK',
-      data: movies,
+      data: movies
     })
   } catch (error) {
-    console.log(error)
-    res.status(502).json({
-      success: false,
-      message: 'Bad Gateway',
-      data: [],
-    })
+    next(error)
   }
 }
 
-const addMovie = async (req, res) => {
+const addMovie = async (req, res, next) => {
   try {
     const schema = Joi.object({
       name: Joi.string().min(1).max(150).required(),
@@ -80,7 +66,7 @@ const addMovie = async (req, res) => {
       directed_by: Joi.string().allow(''),
       casts: Joi.array().items(Joi.string().min(5).max(30).allow('')),
       synopsis: Joi.string().allow(''),
-      poster: Joi.string().uri().allow(''),
+      poster: Joi.string().uri().allow('')
     })
 
     await schema.validateAsync(req.body)
@@ -90,22 +76,17 @@ const addMovie = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Data inserted',
-      data: movies,
+      data: movies
     })
   } catch (error) {
-    console.log(error)
-    res.status(502).json({
-      success: false,
-      message: 'Bad Gateway',
-      data: [],
-    })
+    next(error)
   }
 }
 
-const updateMovie = async (req, res) => {
+const updateMovie = async (req, res, next) => {
   try {
     const paramSchema = Joi.object({
-      id: Joi.string().required(),
+      id: Joi.string().required()
     })
     const bodySchema = Joi.object({
       name: Joi.string().min(1).max(150).required(),
@@ -115,7 +96,7 @@ const updateMovie = async (req, res) => {
       directed_by: Joi.string().allow(''),
       casts: Joi.array().items(Joi.string().min(5).max(30).allow('')),
       synopsis: Joi.string().allow(''),
-      poster: Joi.string().uri().allow(''),
+      poster: Joi.string().uri().allow('')
     })
 
     await paramSchema.validateAsync(req.params)
@@ -124,61 +105,45 @@ const updateMovie = async (req, res) => {
     const movies = await MovieModel._updateMovie(req)
 
     if (movies.length === 0) {
-      res.status(404).json({
+      throw {
         success: false,
-        message: 'Not Found',
-      })
-      return
+        message: 'Not Found'
+      }
     }
 
     res.status(200).json({
       success: true,
       message: 'Data Updated',
-      data: movies,
+      data: movies
     })
   } catch (error) {
-    console.log(error)
-    res.status(500).json({
-      success: false,
-      message: 'Internal Application Error',
-      data: [],
-    })
-    return
-    // don't remove return or it will buggy
+    next(error)
   }
 }
 
-const deleteMovie = async (req, res) => {
+const deleteMovie = async (req, res, next) => {
   try {
     const schema = Joi.object({
-      id: Joi.string().required(),
+      id: Joi.string().required()
     })
     await schema.validateAsync(req.params)
 
     const movies = await MovieModel._deleteMovie(req)
 
     if (movies.length === 0) {
-      res.status(404).json({
+      throw {
         success: false,
-        message: 'Not Found',
-      })
-      return
+        message: 'Not Found'
+      }
     }
 
     res.status(200).json({
       success: true,
       message: 'Data Deleted',
-      data: movies,
+      data: movies
     })
   } catch (error) {
-    console.log(error.message)
-    const result = {
-      success: false,
-      message: 'Internal Application Error',
-      data: [],
-    }
-    return res.status(500).json(result)
-    // don't remove return or it will buggy
+    next(error)
   }
 }
 
@@ -187,5 +152,5 @@ module.exports = {
   getDetailMovie,
   addMovie,
   updateMovie,
-  deleteMovie,
+  deleteMovie
 }
