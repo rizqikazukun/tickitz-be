@@ -10,10 +10,7 @@ const userErrorHandler = (err, req, res, next) => {
     status = 404
     message = err.message
   }
-  if (
-    err.message ===
-    'duplicate key value violates unique constraint "unique_email"'
-  ) {
+  if (err.message.includes('duplicate key value violates unique constraint')) {
     // this is for error throw by postgres
     status = 422
     message = "Can't use same email, Email already used."
@@ -22,7 +19,8 @@ const userErrorHandler = (err, req, res, next) => {
     err.message === '"email" must be a valid email' ||
     err.message === '"password" must be a string' ||
     err.message === 'Email Not Registered' ||
-    err.message === 'Password Incorrect'
+    err.message === 'Password Incorrect' ||
+    err.message.includes('length must be at least')
   ) {
     // this is for error throw by Joi and developer known releated error
     status = 422

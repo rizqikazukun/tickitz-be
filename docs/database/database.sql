@@ -1,9 +1,15 @@
 -- This is base on postgreSQL Query
 -- DDL
 
+-- DROP DATABASE IF EXISTS tickitz;
+-- CREATE DATABASE tickitz;
+-- SET search_path TO tickitz;
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 DROP TABLE IF EXISTS movies;
 
-CREATE TABLE "movies" (
+CREATE TABLE tickitz."public"."movies" (
     "id" SERIAL4 UNIQUE PRIMARY KEY,
     "name" varchar(200),
     "release_date" date,
@@ -15,9 +21,10 @@ CREATE TABLE "movies" (
     "poster" text
 );
 
+
 DROP TABLE IF EXISTS "cinemas";
 
-CREATE TABLE "cinemas" (
+CREATE TABLE "public"."cinemas" (
     "id" SERIAL4 UNIQUE PRIMARY KEY,
     "movie_id" int4,
     "name" varchar(200),
@@ -30,11 +37,11 @@ CREATE TABLE "cinemas" (
 
 DROP TABLE IF EXISTS "order_history";
 
-CREATE TABLE "order_history" (
+CREATE TABLE "public"."order_history" (
     "id" SERIAL4 UNIQUE PRIMARY KEY,
     "movie_id" int4,
     "cinema_id" int4,
-    "user_id" int4,
+    "user_uid" UUID,
     "created_at" date,
     "movie_srarted" date,
     "seat" jsonb,
@@ -43,14 +50,14 @@ CREATE TABLE "order_history" (
 
 DROP TABLE IF EXISTS "months";
 
-CREATE TABLE "months" (
+CREATE TABLE "public"."months" (
     "id" SERIAL4 UNIQUE PRIMARY KEY,
     "name" varchar(20)
 );
 
 DROP TABLE IF EXISTS "payments";
 
-CREATE TABLE "payments" (
+CREATE TABLE "public"."payments" (
 	"id" SERIAL4 UNIQUE PRIMARY KEY,
     "name" varchar(200),
     "logo" text
@@ -58,7 +65,7 @@ CREATE TABLE "payments" (
 
 DROP TABLE IF EXISTS seats;
 
-CREATE TABLE "seats" (
+CREATE TABLE "public"."seats" (
     "id" SERIAL4 UNIQUE PRIMARY KEY,
     "seat_a" jsonb,
     "seat_b" jsonb,
@@ -71,12 +78,14 @@ CREATE TABLE "seats" (
 
 DROP TABLE IF EXISTS "users";
 
-CREATE TABLE "users" (
+CREATE TABLE "public"."users" (
     "id" SERIAL4 UNIQUE PRIMARY KEY,
     "first_name" varchar(100),
     "last_name" varchar(100),
     "phone_number" varchar(20),
+    "role" varchar(20),
     "email" varchar(100) UNIQUE,
+    "uid" UUID DEFAULT uuid_generate_v4() UNIQUE,
     "password" varchar(250),
     "photo_profile" text
 );
@@ -87,55 +96,32 @@ CREATE TABLE "users" (
 ALTER TABLE cinemas ADD CONSTRAINT fk_cinemas_movies FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE order_history ADD CONSTRAINT fk_movieId_movies FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE order_history ADD CONSTRAINT fk_cinemaId_cinemas FOREIGN KEY ("cinema_id") REFERENCES "cinemas" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE order_history ADD CONSTRAINT fk_userId_users FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE;
-
-alter table users add constraint unique_email unique ("email") ;
-
-truncate users ;
+ALTER TABLE order_history ADD CONSTRAINT fk_userId_users FOREIGN KEY (user_uid) REFERENCES users (uid) ON DELETE CASCADE ON UPDATE CASCADE;
 
 
--- DML
-select * from movies m order by id asc;
-select * from cinemas c ;
-select * from users u;
-select * from order_history oh ;
-
-delete from movies where id=21;
-
-update movies set name='Petualangan Sherina 2', genres='["Fun"]' where id='21';
-
-SELECT id, name, duration, genres, poster FROM movies where lower(name) like lower('%petualangan%') order by id
+-- Seeder
 
 insert into movies (name, release_date, duration, genres, directed_by, casts, synopsis, poster)
 values ('Petualangan Upin dan Ipin', '2013-02-15', '120 min', '["Comedy", "Family"]', 'Shin', '["Upin","Ipin", "Kak Ros", "Opah"]', 'Pada dahulu kala', 
 'https://m.media-amazon.com/images/M/MV5BMDgzZjNkMTUtNTdlOC00OGZiLWE2OGUtMzcyOWNiZmRmMzQxXkEyXkFqcGdeQXVyNDE2NjE1Njc@._V1_SX300.jpg');
 
-update movies set
-    name='Petualangan dari bharat 3',
-    release_date='1989-02-15T00:00:00.000Z',
-    duration='120 min',
-    genres='["History","Drama"]',
-    directed_by='Shin',
-    casts='["Ai","Ue","Ou"]',
-    synopsis='Pada dahulu kala',
-    poster='https://m.media-amazon.com/images/M/MV5BMDgzZjNkMTUtNTdlOC00OGZiLWE2OGUtMzcyOWNiZmRmMzQxXkEyXkFqcGdeQXVyNDE2NjE1Njc@._V1_SX300.jpg'
-    where id='22';
-   
-   
-   insert into cinemas 
-      (movie_id, name, city, address, show_times, price, logo)
-    values
-      (2,
-      'CGV Cinemas Pacific Place',
-      'South Jakarta',
-      'Pacific Place Lt. 6. Jln. Jend. Sudirman Kav 52-53, SCBD Jakarta',
-      '["11:30","14:00","16:30","19:00","19:50","21:30"]',
-      75000,
-      'https://upload.wikimedia.org/wikipedia/commons/6/6c/CGV_Cinemas.svg')
-    returning id;
+insert into cinemas  (movie_id, name, city, address, show_times, price, logo)
+values (1, 'CGV Pacific Place', 'South Jakarta', 'Pacific Place Lt. 6. Jln. Jend. Sudirman Kav 52-53, SCBD Jakarta',
+'["11:30","14:00","16:30","19:00","19:50","21:30"]', 75000, 'https://upload.wikimedia.org/wikipedia/commons/6/6c/CGV_Cinemas.svg')
+returning id;
 
-   
-create database jwtHandling;
+INSERT INTO users ("first_name", "last_name", "phone_number", "role", "email", "password", "photo_profile"  ) 
+values ('Obito','Uciha','+819883210', 'admin', 'ucihaobito@example.com', 'null', 'https://upload.wikimedia.org/wikipedia/en/b/bb/ObitoUchiha.png');
+
+
+-- DML
+select * from movies m ;
+select * from cinemas c ;
+select * from users u ;	
+select * from order_history oh ;
+
+
+
 
    
 

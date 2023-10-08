@@ -10,10 +10,8 @@ class UsersController {
       const schema = Joi.object({
         first_name: Joi.string().min(1).max(20).required(),
         last_name: Joi.string().min(1).max(20).required(),
-        phone_number: Joi.string().min(1).max(15).allow(''),
         email: Joi.string().email().required(),
-        password: Joi.string().min(8).max(100).required(),
-        photo_profile: Joi.string().uri().allow('')
+        password: Joi.string().min(8).max(100).required()
       })
 
       // Joi will automatically throw error to catch
@@ -56,7 +54,7 @@ class UsersController {
 
       const accessToken = await jwt.sign(
         {
-          id: userData[0].id,
+          uid: userData[0].uid,
           email: userData[0].email
         },
         process.env.JWT_SECRET
@@ -122,7 +120,6 @@ class UsersController {
         first_name: Joi.string().min(1).max(20).required(),
         last_name: Joi.string().min(1).max(20).required(),
         phone_number: Joi.string().min(1).max(15).allow(''),
-        email: Joi.string().email().required(),
         photo_profile: Joi.string().uri().allow('')
       })
 
@@ -141,6 +138,34 @@ class UsersController {
       res.status(200).json({
         success: true,
         message: 'Data Updated',
+        data: userData
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async updateUserEmail(req, res, next) {
+    try {
+      const schema = Joi.object({
+        email: Joi.string().email().required()
+      })
+
+      await schema.validateAsync(req.body)
+
+      const userData = await UserModels._updateUserEmail(req)
+
+      if (userData.length === 0) {
+        throw {
+          type: 'db_user',
+          message: 'No user found',
+          reason: 'User has been deleted'
+        }
+      }
+
+      res.status(200).json({
+        success: true,
+        message: 'Email Updated',
         data: userData
       })
     } catch (error) {
