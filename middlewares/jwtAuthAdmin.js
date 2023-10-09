@@ -9,13 +9,18 @@ const adminAuth = async (req, res, next) => {
     if (auth && role === 'admin') {
       next()
     } else {
-      throw { message: 'Unauthorize' }
+      res.status(401).json({
+        success: false,
+        message: 'Unautorize'
+      })
+      return
     }
   } catch (error) {
     res.status(401).json({
       success: false,
-      message: error.message
+      message: 'Unautorize'
     })
+    return
   }
 }
 

@@ -10,7 +10,10 @@ const userErrorHandler = (err, req, res, next) => {
     status = 404
     message = err.message
   }
-  if (err.message.includes('duplicate key value violates unique constraint')) {
+  if (
+    err.message.includes('duplicate key value violates unique constraint') &&
+    err.message.includes('email')
+  ) {
     // this is for error throw by postgres
     status = 422
     message = "Can't use same email, Email already used."

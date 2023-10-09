@@ -93,7 +93,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/movies?search=hau&year=desc",
+							"raw": "localhost:3000/movies?search=%&year=%",
 							"host": [
 								"localhost"
 							],
@@ -104,12 +104,12 @@
 							"query": [
 								{
 									"key": "search",
-									"value": "hau",
+									"value": "%",
 									"description": "Search anything like a keyword"
 								},
 								{
 									"key": "year",
-									"value": "desc",
+									"value": "%",
 									"description": "Sorting by year [ default by name | desc | asc | else by id ]"
 								}
 							]
@@ -151,7 +151,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"imdbId\": \"tt1695843\"\r\n}",
+							"raw": "{\r\n  \"imdbId\": \"tt1361336\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -206,14 +206,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/movies/5",
+							"raw": "localhost:3000/movies/7",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
 								"movies",
-								"5"
+								"7"
 							]
 						}
 					},
@@ -221,16 +221,6 @@
 				}
 			],
 			"description": "This folder contain movie api from tickitz be",
-			"auth": {
-				"type": "bearer",
-				"bearer": [
-					{
-						"key": "token",
-						"value": "{{ticAccessToken}}",
-						"type": "string"
-					}
-				]
-			},
 			"event": [
 				{
 					"listen": "prerequest",
@@ -368,16 +358,6 @@
 				}
 			],
 			"description": "This folder contain movie api from tickitz be",
-			"auth": {
-				"type": "bearer",
-				"bearer": [
-					{
-						"key": "token",
-						"value": "{{ticAccessToken}}",
-						"type": "string"
-					}
-				]
-			},
 			"event": [
 				{
 					"listen": "prerequest",
@@ -446,7 +426,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"rizqi@example.com\",\n    \"password\": \"IniPasswordBaru\"\n}",
+							"raw": "{\n    \"email\": \"rizukides@example.com\",\n    \"password\": \"rizukides\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -474,7 +454,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"first_name\" : \"Sasuke\",\n    \"last_name\": \"Uciha\",\n    \"email\" : \"ucihasasuke@example.com\",\n    \"password\" : \"iniPasswordSaya\"\n}",
+							"raw": "{\n    \"first_name\" : \"Sikamaru\",\n    \"last_name\": \"Nara\",\n    \"email\" : \"shikamarunara@example.com\",\n    \"password\" : \"iniPasswordSaya\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -502,7 +482,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "        {\n            \"first_name\": \"{{$randomFirstName}}\",\n            \"last_name\": \"{{$randomLastName}}\",\n            \"phone_number\": \"{{$randomPhoneNumber}}\",\n            \"photo_profile\": \"{{$randomAvatarImage}}\"\n        }",
+							"raw": "        {\n            \"first_name\": \"Shikamaru\",\n            \"last_name\": \"Uchiha\",\n            \"phone_number\": \"{{$randomPhoneNumber}}\",\n            \"photo_profile\": \"{{$randomAvatarImage}}\"\n        }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -583,16 +563,6 @@
 				}
 			],
 			"description": "This folder contain movie api from tickitz be",
-			"auth": {
-				"type": "bearer",
-				"bearer": [
-					{
-						"key": "token",
-						"value": "{{ticAccessToken}}",
-						"type": "string"
-					}
-				]
-			},
 			"event": [
 				{
 					"listen": "prerequest",
@@ -633,12 +603,6 @@
 					""
 				]
 			}
-		}
-	],
-	"variable": [
-		{
-			"key": "accessToken",
-			"value": ""
 		}
 	]
 }

@@ -7,13 +7,19 @@ const auth = async (req, res, next) => {
 
     if (auth) {
       next()
+    } else {
+      res.status(401).json({
+        success: false,
+        message: 'Unautorize'
+      })
+      return
     }
   } catch (error) {
-    console.log(error)
     res.status(401).json({
       success: false,
-      message: 'Unauthorize'
+      message: 'Unautorize'
     })
+    return
   }
 }
 
