@@ -24,6 +24,14 @@ const movieErrorHandler = require('../middlewares/movieErrorHandler')
 const cinemaErrorHandler = require('../middlewares/cinemaErrorHandler')
 const adminAuth = require('../middlewares/jwtAuthAdmin')
 
+// INDEX
+router.get('/', (req, res) => {
+  return res.status(200).json({
+    success: true,
+    message: 'api running well'
+  })
+})
+
 // ENDPOINT MOVIES
 router.get('/movies', getMovies, movieErrorHandler)
 router.get('/movies/:id', getDetailMovie, movieErrorHandler)
