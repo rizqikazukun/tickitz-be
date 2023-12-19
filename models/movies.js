@@ -6,7 +6,7 @@ class MovieModel {
 
     const movies = await sql`SELECT id, name, ${
       !year || year === '' ? sql`` : sql`release_date,`
-    } duration, genres, poster FROM movies
+    } duration, genres, poster FROM tbl_movies_rzq
         ${
           !search || search === ''
             ? sql``
@@ -29,7 +29,7 @@ class MovieModel {
 
   static async _getDetailMovie(payload) {
     const { id } = payload.params
-    const movies = await sql`SELECT * FROM movies WHERE id=${id}`
+    const movies = await sql`SELECT * FROM tbl_movies_rzq WHERE id=${id}`
     return movies
   }
 
@@ -42,11 +42,11 @@ class MovieModel {
       directed_by,
       casts,
       synopsis,
-      poster,
+      poster
     } = payload.body
 
     const movies = sql`
-        insert into movies
+        insert into tbl_movies_rzq
           (name, release_date, duration, genres, directed_by, casts, synopsis, poster)
         values
           (${name}, ${release_date},${duration},${genres},${directed_by},${casts},${synopsis},${poster} )
@@ -65,10 +65,10 @@ class MovieModel {
       directed_by,
       casts,
       synopsis,
-      poster,
+      poster
     } = payload.body
 
-    const movies = await sql`update movies set
+    const movies = await sql`update tbl_movies_rzq set
         name=${name},
         release_date=${release_date},
         duration=${duration},
@@ -84,7 +84,8 @@ class MovieModel {
 
   static async _deleteMovie(payload) {
     const { id } = payload.params
-    const movies = await sql`DELETE FROM movies where id=${id} RETURNING id;`
+    const movies =
+      await sql`DELETE FROM tbl_movies_rzq where id=${id} RETURNING id;`
     return movies
   }
 }

@@ -11,20 +11,20 @@ class UserModels {
     const saltRoundssalt = 15
     const hashed = await bcrypt.hash(password, saltRoundssalt)
     const users = sql`
-        INSERT INTO users (first_name, last_name, email, role, password) 
+        INSERT INTO tbl_users_rzq (first_name, last_name, email, role, password) 
         VALUES (${first_name}, ${last_name}, ${email}, ${role}, ${hashed}) returning uid`
     return users
   }
 
   static async _userLogin(payload) {
     const { email } = payload.body
-    const users = await sql`SELECT * FROM users where email=${email}`
+    const users = await sql`SELECT * FROM tbl_users_rzq where email=${email}`
     return users
   }
 
   static async _getListUser() {
     const users =
-      await sql`SELECT first_name, last_name, photo_profile, uid FROM Users`
+      await sql`SELECT first_name, last_name, photo_profile, uid FROM tbl_users_rzq`
     return users
   }
 
@@ -32,7 +32,7 @@ class UserModels {
     const token = payload.headers.authorization.split('Bearer ')[1]
     const { uid } = jwt.decode(token, process.env.JWT_SECRET)
     const users =
-      await sql`SELECT first_name, last_name, phone_number, email, role, photo_profile, uid FROM users where uid=${uid}`
+      await sql`SELECT first_name, last_name, phone_number, email, role, photo_profile, uid FROM tbl_users_rzq where uid=${uid}`
     return users
   }
 
@@ -41,7 +41,7 @@ class UserModels {
     const { uid } = jwt.decode(token, process.env.JWT_SECRET)
     const { first_name, last_name, phone_number, photo_profile } = payload.body
 
-    const users = await sql`update users set
+    const users = await sql`update tbl_users_rzq set
           first_name=${first_name},
           last_name=${last_name},
           phone_number=${phone_number},
@@ -57,7 +57,7 @@ class UserModels {
     const { email } = payload.body
 
     const users = await sql`
-          update users set
+          update tbl_users_rzq set
           email=${email}
           where uid=${uid} RETURNING uid;`
     return users
@@ -72,7 +72,7 @@ class UserModels {
     const hashed = await bcrypt.hash(password, saltRoundssalt)
 
     const users = await sql`
-          update users set
+          update tbl_users_rzq set
           password=${hashed}
           where uid=${uid} RETURNING uid;`
 
